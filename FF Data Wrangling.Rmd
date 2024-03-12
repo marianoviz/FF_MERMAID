@@ -1,15 +1,573 @@
 ---
 title: "FF Data Wrangling"
 author: "Mariano Viz"
-date: "2024-02-19"
+date: "2024-02-12"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(tidyverse)
+library(here)
+library(lubridate)
+library(kableExtra)
+
+```
+
+## Read in data
+
+```{r}
+ff2_fish <- read_csv(here("Mermaid Ingest Data", "Historical","ff2_fish.csv"))
+ff2_habitat <- read_csv(here("Mermaid Ingest Data", "Historical","ff2_habitat.csv"))
+
+```
+
+## Missing Data
+
+```{r}
+# Missing data ff2_fish
+ff2_fish_na_counts <- ff2_fish %>%
+  summarise(across(everything(), ~sum(is.na(.))))
+
+# Split the dataframe into two parts
+first_half <- ff2_fish_na_counts %>% select(1:11)
+second_half <- ff2_fish_na_counts %>% select(12:23)
+# First table
+first_half %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+# Second table
+second_half %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+
+# Missing data ff2_habitat
+ff2_habitat_na_counts <- ff2_habitat %>%
+  summarise(across(everything(), ~sum(is.na(.))))
+
+# Split the dataframe into two parts
+first_half_hab <- ff2_habitat_na_counts %>% select(1:14)
+second_half_hab <- ff2_habitat_na_counts %>% select(14:28)
+# First table
+first_half_hab %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+# Second table
+second_half_hab %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+```
+
+
+## Check Categories: Sites (w/latitude and longitude), Management Regimes,and Methodology 
+
+### 1. ff2_fish:
+
+```{r}
+## ff2_fish:
+
+# Get unique countries
+ff2_fish_country <- ff2_fish %>%
+  distinct(country) %>%
+  pull(country)
+
+print(ff2_fish_country)
+
+# Count the number of observations for each country
+ff2_fish_country_counts <- ff2_fish %>%
+  count(country)
+
+ff2_fish_country_counts%>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+# Get unique sites (location_name) --> Manual entry (610 unique sites)
+ff2_fish_sites <- ff2_fish %>%
+  group_by(location_name, lat, lon, location_status) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+ff2_fish_sites %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
+
+
+
+### 1.1. Mozambique
+
+```{r}
+# Filter country == "Mozambique"
+ff2_fish_moz <- ff2_fish %>%
+  filter(country == "Mozambique")
+
+# Get unique sites (location_name)
+ff2_fish_moz_sites <- ff2_fish_moz %>%
+  group_by(location_name, lat, lon, location_status) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+ff2_fish_moz_sites %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+
+
+# Check for locations with the same name but different latitudes or longitudes
+locations_with_different_coords_moz <- ff2_fish_moz %>%
+  group_by(location_name) %>%
+  summarise(
+    Unique_Lats = n_distinct(lat),
+    Unique_Lons = n_distinct(lon),
+    .groups = "drop") %>%
+  filter(Unique_Lats > 1 | Unique_Lons > 1) # Filter for locations with more than one unique latitude or longitude
+
+locations_with_different_coords_moz %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+```
+
+### 1.2. Honduras
+
+```{r}
+# Filter country == "Honduras"
+ff2_fish_hon <- ff2_fish %>%
+  filter(country == "Honduras")
+
+# Get unique sites (location_name)
+ff2_fish_hon_sites <- ff2_fish_hon %>%
+  group_by(location_name, lat, lon, location_status) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+ff2_fish_hon_sites %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+# Check for locations with the same name but different latitudes or longitudes
+locations_with_different_coords_hon <- ff2_fish_hon %>%
+  group_by(location_name) %>%
+  summarise(
+    Unique_Lats = n_distinct(lat),
+    Unique_Lons = n_distinct(lon),
+    .groups = "drop") %>%
+  filter(Unique_Lats > 1 | Unique_Lons > 1) # Filter for locations with more than one unique latitude or longitude
+
+locations_with_different_coords_hon %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+```
+
+
+### 1.3. Indonesia
+
+```{r}
+# Filter country == "Indonesia"
+ff2_fish_ind <- ff2_fish %>%
+  filter(country == "Indonesia")
+
+# Get unique sites (location_name)
+ff2_fish_ind_sites <- ff2_fish_ind %>%
+  group_by(location_name, lat, lon, location_status) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+ff2_fish_ind_sites %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+# Check for locations with the same name but different latitudes or longitudes
+locations_with_different_coords_ind <- ff2_fish_ind %>%
+  group_by(location_name) %>%
+  summarise(
+    Unique_Lats = n_distinct(lat),
+    Unique_Lons = n_distinct(lon),
+    .groups = "drop") %>%
+  filter(Unique_Lats > 1 | Unique_Lons > 1) # Filter for locations with more than one unique latitude or longitude
+
+locations_with_different_coords_ind %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+```
+
+
+
+### 1.4. Philippines
+
+```{r}
+# Filter country == "Philippines"
+ff2_fish_phi <- ff2_fish %>%
+  filter(country == "Philippines")
+
+# Get unique sites (location_name)
+ff2_fish_phi_sites <- ff2_fish_phi %>%
+  group_by(location_name, lat, lon, location_status) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+ff2_fish_phi_sites %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+# Check for locations with the same name but different latitudes or longitudes
+locations_with_different_coords_phi <- ff2_fish_phi %>%
+  group_by(location_name) %>%
+  summarise(
+    Unique_Lats = n_distinct(lat),
+    Unique_Lons = n_distinct(lon),
+    .groups = "drop") %>%
+  filter(Unique_Lats > 1 | Unique_Lons > 1) # Filter for locations with more than one unique latitude or longitude
+
+locations_with_different_coords_phi %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+distinct_coords_for_varied_locations <- ff2_fish_phi %>%
+  group_by(location_name) %>%
+  distinct(location_name, lat, lon) %>%
+  ungroup() %>%
+  arrange(location_name, lat, lon)
+
+# Filter to keep only those locations with more than one unique combination of latitude and longitude
+locations_with_different_coords_phi_detail <- distinct_coords_for_varied_locations %>%
+  add_count(location_name) %>%
+  filter(n > 1) %>%
+  select(-n) # remove the count column after filtering
+
+# View the results
+locations_with_different_coords_phi_detail %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+```
+
+
+
+
+
+
+
+
+### 2. ff2_habitat:
+
+```{r}
+## ff2_habitat:
+
+# Get unique countries
+ff2_habitat_country <- ff2_habitat %>%
+  distinct(country) %>%
+  pull(country)
+
+print(ff2_habitat_country)
+
+# Count the number of observations for each country
+ff2_habitat_country_counts <- ff2_habitat %>%
+  count(country)
+
+ff2_habitat_country_counts %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+# Get unique sites (location_name) --> Manual entry (369 unique sites)
+ff2_habitat_sites <- ff2_habitat %>%
+  group_by(location_name, lat, lon, location_status) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+ff2_habitat_sites %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+```
+
+#### ff2_habitat Methodology
+
+```{r}
+# Get methodology
+ff2_habitat_methodology <- ff2_habitat %>%
+  distinct(methodology) %>%
+  pull(methodology)
+
+print(ff2_habitat_methodology)
+
+#Count methodology 
+ff2_habitat_methodology_counts <- ff2_habitat %>%
+  count(methodology)
+
+ff2_habitat_methodology_counts %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
+
+### 2.1. Mozambique
+
+```{r}
+
+# Filter country == "Mozambique"
+ff2_habitat_moz <- ff2_habitat %>%
+  filter(country == "Mozambique")
+
+# Get unique sites (location_name)
+ff2_habitat_moz_sites <- ff2_habitat_moz %>%
+  group_by(location_name, lat, lon, location_status) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+ff2_habitat_moz_sites %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+# Check for locations with the same name but different latitudes or longitudes
+locations_with_different_coords_moz_hab <- ff2_habitat_moz %>%
+  group_by(location_name) %>%
+  summarise(
+    Unique_Lats = n_distinct(lat),
+    Unique_Lons = n_distinct(lon),
+    .groups = "drop") %>%
+  filter(Unique_Lats > 1 | Unique_Lons > 1) # Filter for locations with more than one unique latitude or longitude
+
+locations_with_different_coords_moz_hab %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+#Count methodology 
+ff2_habitat_methodology_counts_moz <- ff2_habitat_moz %>%
+  count(methodology)
+
+ff2_habitat_methodology_counts_moz %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
 
 
 
 ```
 
+
+### 2.2. Honduras
+
+```{r}
+
+# Filter country == "Honduras"
+ff2_habitat_hon <- ff2_habitat %>%
+  filter(country == "Honduras")
+
+# Get unique sites (location_name)
+ff2_habitat_hon_sites <- ff2_habitat_hon %>%
+  group_by(location_name, lat, lon, location_status) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+ff2_habitat_hon_sites %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+# Check for locations with the same name but different latitudes or longitudes
+locations_with_different_coords_hon_hab <- ff2_habitat_hon %>%
+  group_by(location_name) %>%
+  summarise(
+    Unique_Lats = n_distinct(lat),
+    Unique_Lons = n_distinct(lon),
+    .groups = "drop") %>%
+  filter(Unique_Lats > 1 | Unique_Lons > 1) # Filter for locations with more than one unique latitude or longitude
+
+locations_with_different_coords_hon_hab %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+#Count methodology 
+ff2_habitat_methodology_counts_hon <- ff2_habitat_hon %>%
+  count(methodology)
+
+ff2_habitat_methodology_counts_hon %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+```
+
+
+### 2.3. Indonesia
+
+```{r}
+
+# Filter country == "Indonesia"
+ff2_habitat_ind <- ff2_habitat %>%
+  filter(country == "Indonesia")
+
+# Get unique sites (location_name)
+ff2_habitat_ind_sites <- ff2_habitat_ind %>%
+  group_by(location_name, lat, lon, location_status) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+ff2_habitat_ind_sites %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+# Check for locations with the same name but different latitudes or longitudes
+locations_with_different_coords_ind_hab <- ff2_habitat_ind %>%
+  group_by(location_name) %>%
+  summarise(
+    Unique_Lats = n_distinct(lat),
+    Unique_Lons = n_distinct(lon),
+    .groups = "drop") %>%
+  filter(Unique_Lats > 1 | Unique_Lons > 1) # Filter for locations with more than one unique latitude or longitude
+
+ locations_with_different_coords_ind_hab %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+#Count methodology 
+ff2_habitat_methodology_counts_ind <- ff2_habitat_ind %>%
+  count(methodology)
+
+ff2_habitat_methodology_counts_ind %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+```
+
+
+
+### 2.4. Philippines
+
+```{r}
+
+# Filter country == "Philippines"
+ff2_habitat_phi <- ff2_habitat %>%
+  filter(country == "Philippines")
+
+# Get unique sites (location_name)
+ff2_habitat_phi_sites <- ff2_habitat_phi %>%
+  group_by(location_name, lat, lon, location_status) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+ff2_habitat_phi_sites %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+# Check for locations with the same name but different latitudes or longitudes
+locations_with_different_coords_phi_hab <- ff2_habitat_phi %>%
+  group_by(location_name) %>%
+  summarise(
+    Unique_Lats = n_distinct(lat),
+    Unique_Lons = n_distinct(lon),
+    .groups = "drop") %>%
+  filter(Unique_Lats > 1 | Unique_Lons > 1) # Filter for locations with more than one unique latitude or longitude
+
+locations_with_different_coords_phi_hab %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+distinct_coords_for_varied_locations_hab <- ff2_habitat_phi %>%
+  group_by(location_name) %>%
+  distinct(location_name, lat, lon) %>%
+  ungroup() %>%
+  arrange(location_name, lat, lon)
+
+# Filter to keep only those locations with more than one unique combination of latitude and longitude
+locations_with_different_coords_phi_detail_hab <- distinct_coords_for_varied_locations_hab %>%
+  add_count(location_name) %>%
+  filter(n > 1) %>%
+  select(-n) # remove the count column after filtering
+
+# View the results
+locations_with_different_coords_phi_detail_hab %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+#Count methodology 
+ff2_habitat_methodology_counts_phi <- ff2_habitat_phi %>%
+  count(methodology)
+
+ff2_habitat_methodology_counts_phi %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+```
+
+
+
+### Elements that will require Validation:
+
+```{r}
+# ff2_fish: 2316 objects
+
+ff2_fish_dates_transect <- ff2_fish %>%
+  group_by(location_name, survey_date, transect_no) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+ff2_fish_dates_transect %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+# ff2_habitat: 1061 objects
+
+ff2_habitat_dates_transect <- ff2_habitat %>%
+  group_by(location_name, surveydate, transect_no) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+ff2_habitat_dates_transect %>% 
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
+
+
+
+### Takeaways
+
+1. It is **quite possible** to import historical data from FF to MERMAID but this app is not prepared to optimize this work: **it will take time!**
+
+2. Time requirement:
+
+- 1000+ unique Sites must be manually entered: name, country, latitude, longitude, exposure, reef type, reef zone (?)
+
+- Missing data (300,000+ missing observations in required fields): survey date, lat/lon, location name, location status, methodology, species
+
+- Manual validation of 3500 sample units (location, survey date, transect)
+
+- Validate species names
+
+
+
+### Specific Issues
+
+1. How should we organize MERMAID Projects? By Country and Dataset (e.g. FF2.0_Indonesia_Fish, FF2.0_Indonesia_Habitat)?
+
+2. How do we address missing data?
+
+3. Which methodology of the 6 available will we choose for Habitat? Benthic Point Transect (PIT)?
+
+4. How should we add the observer's email?
+
+5. How do we choose Exposure / Reef Type / Reef Zone for all sites?
+
+6. How do we specify Management Regimes? General for all Managed Access?
+ 
 

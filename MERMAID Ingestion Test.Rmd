@@ -1,0 +1,248 @@
+---
+title: "MERMAID Ingestion Test"
+author: "Mariano Viz"
+date: "2024-02-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(mermaidr)
+
+```
+
+
+## MERMAID Ingestion Test
+
+
+### 1. Download the MERMAID Template
+
+```{r}
+
+# Access your MERMAID projects by using mermaid_search_my_projects() with the project name
+test <- mermaid_search_my_projects("Test_FF2.0") 
+
+# Get the fish belt MERMAID template and options using mermaid_import_get_template_and_options() and save it to a file (in this case called fishbelt_mermaid_template.xlsx and benthicpit_mermaid_template.xlsx)
+
+fish_template_and_options <- mermaid_import_get_template_and_options( 
+  test,
+  "fishbelt",
+  "fishbelt_mermaid_template.xlsx")
+
+fish_template_and_options[["Template"]]
+names(fish_template_and_options)
+fish_template_and_options[["Site *"]]
+fish_template_and_options[["Management *"]]
+
+habitat_template_and_options <- mermaid_import_get_template_and_options(
+  test,
+  "benthicpit", # Method
+  "benthicpit_mermaid_template.xlsx")
+
+habitat_template_and_options[["Template"]]
+names(habitat_template_and_options)
+
+```
+
+### 2. Reformat the data to match the template
+
+```{r}
+# Filter by country/sites
+ff2_fish <- read_csv(here("Mermaid Ingest Data", "Historical","ff2_fish.csv"))
+ff2_fish_moz <- ff2_fish %>%
+  filter(country == "Mozambique")
+ff2_fish_moz_filtered <- ff2_fish_moz %>%
+  filter(location_name %in% c("Mecumbo", "Luanda_1"))
+
+
+# Columnm "Sample date: ... *"
+# Convert 'survey_date' to Date type
+ff2_fish_moz_filtered$survey_date <- as.Date(ff2_fish_moz_filtered$survey_date)
+# Create new columns for year, month, and day
+ff2_fish_moz_filtered <- ff2_fish_moz_filtered %>%
+  mutate(`Sample date: Year *` = year(survey_date),
+         `Sample date: Month *` = month(survey_date),
+         `Sample date: Day *` = day(survey_date))
+
+# Column Fish size bin *
+fish_template_and_options[["Fish size bin *"]]
+ff2_fish_moz_filtered <- ff2_fish_moz_filtered %>%
+  mutate(`Fish size bin *` = 1)
+
+# Column Size *
+fish_template_and_options[["Size *"]]
+ff2_fish_moz_filtered <- ff2_fish_moz_filtered %>%
+  rename(`Size *` = length)
+
+# Column Site *
+fish_template_and_options[["Site *"]]
+ff2_fish_moz_filtered <- ff2_fish_moz_filtered %>%
+  rename(`Site *` = location_name)
+
+# Column Depth *
+fish_template_and_options[["Depth *"]]
+ff2_fish_moz_filtered <- ff2_fish_moz_filtered %>%
+  rename(`Depth *` = water_depth)
+
+# Column Transect length surveyed *
+fish_template_and_options[["Transect length surveyed *"]]
+ff2_fish_moz_filtered <- ff2_fish_moz_filtered %>%
+  mutate(`Transect length surveyed *` = 50)
+
+# Column Observer emails * 
+fish_template_and_options[["Observer emails *"]]
+ff2_fish_moz_filtered <- ff2_fish_moz_filtered %>%
+  mutate(`Observer emails *` = "marianoviz1988@gmail.com")
+
+# Column Count *
+fish_template_and_options[["Count *"]]
+ff2_fish_moz_filtered <- ff2_fish_moz_filtered %>%
+  rename(`Count *` = count)
+
+# Column Management *
+fish_template_and_options[["Management *"]]
+ff2_fish_moz_filtered <- ff2_fish_moz_filtered %>%
+  rename(`Management *` = location_status)
+
+# Column Transect number  *
+fish_template_and_options[["Transect number *"]]
+ff2_fish_moz_filtered <- ff2_fish_moz_filtered %>%
+  rename(`Transect number *` = transect_no)
+
+# Column Width *
+fish_template_and_options[["Width *"]]
+ff2_fish_moz_filtered <- ff2_fish_moz_filtered %>%
+  mutate(`Width *` = "Mixed: >=10 cm & <35 cm @ 5 m, >=35 cm @ 20 m")
+
+# Column "Fish name *" 
+fish_template_and_options[["Fish name *"]]
+ff2_fish_moz_filtered <- ff2_fish_moz_filtered %>%
+  rename(`Fish name *` = species)
+
+# Column Reef slope
+fish_template_and_options[["Reef slope"]]
+ff2_fish_moz_filtered <- ff2_fish_moz_filtered %>%
+  rename(`Reef slope` = reef_slope)
+
+
+
+#Select Columns
+ff2_fish_moz_selected <- ff2_fish_moz_filtered %>%
+  select("Site *",
+         "Management *",
+         "Sample date: Year *",
+         "Sample date: Month *",
+         "Sample date: Day *",
+         "Depth *",
+         "Transect number *",
+         "Transect length surveyed *",
+         "Width *",
+         "Fish size bin *",
+         "Reef slope",
+         "Observer emails *",
+         "Fish name *",
+         "Size *",
+         "Count *")
+
+
+```
+
+
+### 3. Address errors and warnings
+
+
+```{r}
+mermaid_import_check_options(ff2_fish_moz_selected, fish_template_and_options, "Site *")
+
+mermaid_import_check_options(ff2_fish_moz_selected, fish_template_and_options, "Management *")
+
+mermaid_import_check_options(ff2_fish_moz_selected, fish_template_and_options, "Sample date: Year *")
+
+mermaid_import_check_options(ff2_fish_moz_selected, fish_template_and_options, "Sample date: Month *")
+
+mermaid_import_check_options(ff2_fish_moz_selected, fish_template_and_options,"Sample date: Day *")
+
+mermaid_import_check_options(ff2_fish_moz_selected, fish_template_and_options,"Depth *")
+         
+mermaid_import_check_options(ff2_fish_moz_selected, fish_template_and_options,"Transect number *")
+         
+mermaid_import_check_options(ff2_fish_moz_selected, fish_template_and_options,"Transect length surveyed *")
+         
+mermaid_import_check_options(ff2_fish_moz_selected, fish_template_and_options,"Width *")
+
+ ff2_fish_moz_selected <- ff2_fish_moz_selected %>% 
+   mutate(`Width *` = case_when(
+    `Width *` == "Mixed: >10 cm & <35 cm @ 5 m, >=35 cm @ 20 m" ~ "Mixed: >=10 cm & <35 cm @ 5 m, >=35 cm @ 20 m",
+    TRUE ~ `Width *`
+  ))
+        
+mermaid_import_check_options(ff2_fish_moz_selected, fish_template_and_options,"Fish size bin *")
+         
+mermaid_import_check_options(ff2_fish_moz_selected, fish_template_and_options,"Reef slope")
+         
+mermaid_import_check_options(ff2_fish_moz_selected, fish_template_and_options,"Observer emails *")
+         
+mermaid_import_check_options(ff2_fish_moz_selected, fish_template_and_options,"Fish name *")
+ 
+  # Renaming Fish Species
+ ff2_fish_moz_selected <- ff2_fish_moz_selected %>% 
+   mutate(`Fish name *` = case_when(
+    `Fish name *` == "Chromis" ~ "Chromis ternatensis",
+    `Fish name *` == "Amphiprion sp." ~ "Amphiprion",
+    TRUE ~ `Fish name *`
+  ))
+ 
+  # Manually renaming Chromis ternatensis
+  ff2_fish_moz_selected[26, 13] <- "Chromis ternatensis"
+  ff2_fish_moz_selected[31, 13] <- "Chromis ternatensis"
+ 
+
+mermaid_import_check_options(ff2_fish_moz_selected, fish_template_and_options,"Size *")
+         
+mermaid_import_check_options(ff2_fish_moz_selected, fish_template_and_options,"Count *")
+
+
+# Clean Data
+
+write_csv(ff2_fish_moz_selected, "fishbelt_clean.csv")
+
+```
+
+### 4. Import (ingest) data to MERMAID
+
+
+```{r}
+# “Dry run” before actually ingesting to check the data:
+mermaid_import_project_data(
+  ff2_fish_moz_selected,
+  test,
+  method = "fishbelt",
+  dryrun = TRUE
+)
+
+
+# Ingesting data:
+mermaid_import_project_data(
+  ff2_fish_moz_selected,
+  test,
+  method = "fishbelt",
+  dryrun = FALSE
+)
+
+
+# Elements Submitted to MERMAID (8): sites, survey date, transect
+ff2_fish_moz_filtered_dates_transect <- ff2_fish_moz %>%
+  filter(location_name %in% c("Mecumbo", "Luanda_1"))  %>%
+  group_by(location_name, survey_date, transect_no) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+print(ff2_fish_moz_filtered_dates_transect)
+
+
+
+```
+
+
