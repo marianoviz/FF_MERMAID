@@ -1,0 +1,854 @@
+---
+title: "FF2.0_fish Data Wrangling"
+author: "Mariano Viz"
+date: "2024-03-4"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(tidyverse)
+library(here)
+library(lubridate)
+library(kableExtra)
+
+```
+
+
+
+## Read in data
+
+```{r}
+ff2_fish <- read_csv(here("Mermaid Ingest Data", "Historical","ff2_fish.csv"))
+
+```
+
+
+
+## Missing Data on Required Fields (by Country)
+
+### 1. Mozambique
+
+
+```{r}
+## Filter country == "Mozambique"
+ff2_fish_moz <- ff2_fish %>%
+  filter(country == "Mozambique")
+
+##########
+
+## Reformat the data to match the MERMAID template
+
+# Convert 'survey_date' to Date type
+ff2_fish_moz$survey_date <- as.Date(ff2_fish_moz$survey_date)
+# Create new columns for year, month, and day
+ff2_fish_moz <- ff2_fish_moz %>%
+  mutate(`Sample date: Year *` = year(survey_date),
+         `Sample date: Month *` = month(survey_date),
+         `Sample date: Day *` = day(survey_date))
+
+# Column Fish size bin *
+ff2_fish_moz <- ff2_fish_moz %>%
+  mutate(`Fish size bin *` = 1)
+
+# Column Size *
+ff2_fish_moz <- ff2_fish_moz %>%
+  rename(`Size *` = length)
+
+# Column Site *
+ff2_fish_moz <- ff2_fish_moz %>%
+  rename(`Site *` = location_name)
+
+# Column Depth *
+ff2_fish_moz <- ff2_fish_moz %>%
+  rename(`Depth *` = water_depth)
+
+# Column Transect length surveyed *
+ff2_fish_moz <- ff2_fish_moz %>%
+  mutate(`Transect length surveyed *` = 50)
+
+# Column Observer emails * 
+ff2_fish_moz <- ff2_fish_moz %>%
+  mutate(`Observer emails *` = "marianoviz1988@gmail.com")
+
+# Column Count *
+ff2_fish_moz <- ff2_fish_moz %>%
+  rename(`Count *` = count)
+
+# Column Management *
+ff2_fish_moz <- ff2_fish_moz %>%
+  rename(`Management *` = location_status)
+
+# Column Transect number  *
+ff2_fish_moz <- ff2_fish_moz %>%
+  rename(`Transect number *` = transect_no)
+
+# Column Width *
+ff2_fish_moz <- ff2_fish_moz %>%
+  mutate(`Width *` = "Mixed: >=10 cm & <35 cm @ 5 m, >=35 cm @ 20 m")
+
+# Column "Fish name *" 
+ff2_fish_moz <- ff2_fish_moz %>%
+  rename(`Fish name *` = species)
+
+# Column Reef slope
+ff2_fish_moz <- ff2_fish_moz %>%
+  rename(`Reef slope` = reef_slope)
+
+
+##########
+
+## NAs counts in required fields:
+na_counts_moz <- ff2_fish_moz %>%
+  summarise(
+    `Management *` = sum(is.na(`Management *`)),
+    `Sample date: Year *` = sum(is.na(`Sample date: Year *`)),
+    `Sample date: Month *` = sum(is.na(`Sample date: Month *`)),
+    `Sample date: Day *` = sum(is.na(`Sample date: Day *`)),
+    `Depth *` = sum(is.na(`Depth *`)),
+    `Transect number *` = sum(is.na(`Transect number *`)),
+    `Transect length surveyed *` = sum(is.na(`Transect length surveyed *`)),
+    `Width *` = sum(is.na(`Width *`)),
+    `Fish size bin *` = sum(is.na(`Fish size bin *`)),
+    `Reef slope` = sum(is.na(`Reef slope`)),
+    `Observer emails *` = sum(is.na(`Observer emails *`)),
+    `Fish name *` = sum(is.na(`Fish name *`)),
+    `Size *` = sum(is.na(`Size *`)),
+    `Count *` = sum(is.na(`Count *`))
+  )
+
+
+# Select rows with NA values in any of the specified columns
+rows_with_na_moz <- ff2_fish_moz %>%
+  filter(is.na(`Management *`) | 
+           is.na(`Sample date: Year *`) | 
+           is.na(`Sample date: Month *`) | 
+           is.na(`Sample date: Day *`) | 
+           is.na(`Depth *`) | 
+           is.na(`Transect number *`) | 
+           is.na(`Transect length surveyed *`) | 
+           is.na(`Width *`) | 
+           is.na(`Fish size bin *`) | 
+           is.na(`Reef slope`) | 
+           is.na(`Observer emails *`) | 
+           is.na(`Fish name *`) | 
+           is.na(`Size *`) | 
+           is.na(`Count *`))
+
+# Replace missing value (!!!: check replacing strategy)
+
+  # Calculate the average size for "Amphiprion" fish
+average_size_amphiprion <- ff2_fish_moz %>%
+  filter(grepl("^Amphiprion", `Fish name *`), !is.na(`Size *`)) %>%
+  summarise(average_size = mean(`Size *`)) %>%
+  pull(average_size)
+
+  # Replace NA value in "Size *" with this average size
+ff2_fish_moz <- ff2_fish_moz %>%
+  mutate(`Size *` = ifelse(is.na(`Size *`) & grepl("^Amphiprion", `Fish name *`), average_size_amphiprion, `Size *`))
+
+
+##########
+
+# Select required fields
+selected_ff2_fish_moz <- ff2_fish_moz %>%
+  select("Site *",
+         "Management *",
+         "Sample date: Year *",
+         "Sample date: Month *",
+         "Sample date: Day *",
+         "Depth *",
+         "Transect number *",
+         "Transect length surveyed *",
+         "Width *",
+         "Fish size bin *",
+         "Reef slope",
+         "Observer emails *",
+         "Fish name *",
+         "Size *",
+         "Count *")
+
+# Check for NAs
+if (any(is.na(selected_ff2_fish_moz))) {
+  cat("There are still NAs present.\n")
+} else {
+  cat("Great, no NAs left!\n")
+}
+
+```
+
+
+
+### 2. Honduras
+
+```{r}
+## Filter country == "Honduras"
+ff2_fish_hon <- ff2_fish %>%
+  filter(country == "Honduras")
+
+##########
+
+## Reformat the data to match the MERMAID template
+
+# Convert 'survey_date' to Date type
+ff2_fish_hon$survey_date <- as.Date(ff2_fish_hon$survey_date)
+# Create new columns for year, month, and day
+ff2_fish_hon <- ff2_fish_hon %>%
+  mutate(`Sample date: Year *` = year(survey_date),
+         `Sample date: Month *` = month(survey_date),
+         `Sample date: Day *` = day(survey_date))
+
+# Column Fish size bin *
+ff2_fish_hon <- ff2_fish_hon %>%
+  mutate(`Fish size bin *` = 1)
+
+# Column Size *
+ff2_fish_hon <- ff2_fish_hon %>%
+  rename(`Size *` = length)
+
+# Column Site *
+ff2_fish_hon <- ff2_fish_hon %>%
+  rename(`Site *` = location_name)
+
+# Column Depth *
+ff2_fish_hon <- ff2_fish_hon %>%
+  rename(`Depth *` = water_depth)
+
+# Column Transect length surveyed *
+ff2_fish_hon <- ff2_fish_hon %>%
+  mutate(`Transect length surveyed *` = 50)
+
+# Column Observer emails * 
+ff2_fish_hon <- ff2_fish_hon %>%
+  mutate(`Observer emails *` = "marianoviz1988@gmail.com")
+
+# Column Count *
+ff2_fish_hon <- ff2_fish_hon %>%
+  rename(`Count *` = count)
+
+# Column Management *
+ff2_fish_hon <- ff2_fish_hon %>%
+  rename(`Management *` = location_status)
+
+# Column Transect number  *
+ff2_fish_hon <- ff2_fish_hon %>%
+  rename(`Transect number *` = transect_no)
+
+# Column Width *
+ff2_fish_hon <- ff2_fish_hon %>%
+  mutate(`Width *` = "Mixed: >=10 cm & <35 cm @ 5 m, >=35 cm @ 20 m")
+
+# Column "Fish name *" 
+ff2_fish_hon <- ff2_fish_hon %>%
+  rename(`Fish name *` = species)
+
+# Column Reef slope
+ff2_fish_hon <- ff2_fish_hon %>%
+  rename(`Reef slope` = reef_slope)
+
+
+##########
+
+## NAs counts in required fields:
+na_counts_hon <- ff2_fish_hon %>%
+  summarise(
+    `Management *` = sum(is.na(`Management *`)),
+    `Sample date: Year *` = sum(is.na(`Sample date: Year *`)),
+    `Sample date: Month *` = sum(is.na(`Sample date: Month *`)),
+    `Sample date: Day *` = sum(is.na(`Sample date: Day *`)),
+    `Depth *` = sum(is.na(`Depth *`)),
+    `Transect number *` = sum(is.na(`Transect number *`)),
+    `Transect length surveyed *` = sum(is.na(`Transect length surveyed *`)),
+    `Width *` = sum(is.na(`Width *`)),
+    `Fish size bin *` = sum(is.na(`Fish size bin *`)),
+    `Observer emails *` = sum(is.na(`Observer emails *`)),
+    `Fish name *` = sum(is.na(`Fish name *`)),
+    `Size *` = sum(is.na(`Size *`)),
+    `Count *` = sum(is.na(`Count *`))
+  )
+
+
+# Select NA values in "Depth *" --> 1082 observations
+depth_na_hon <- ff2_fish_hon %>%
+  filter(is.na(`Depth *`)) # What should we do here?
+
+# Check combinations of MA, Reef Zone, and Depth
+depth_na_hon_comb <- ff2_fish_hon %>%
+  distinct(`ma_name`, `reef_zone`, `Depth *`)
+
+# Eliminate the word "reef" and spaces from the column reef_zone and replace "bank" with "back"
+ff2_fish_hon$reef_zone <- str_replace_all(ff2_fish_hon$reef_zone, "\\s*reef\\s*", "")
+ff2_fish_hon$reef_zone <- str_replace_all(ff2_fish_hon$reef_zone, "bank", "back")
+
+# Replace NAs in the column "Depth *" with an average of other "Depth *" for observations sharing the same MA name and Reef Zone (!!!: check replacing strategy)
+ff2_fish_hon <- ff2_fish_hon %>%
+  group_by(ma_name, reef_zone) %>%
+  mutate(`Depth *` = ifelse(is.na(`Depth *`), mean(`Depth *`, na.rm = TRUE), `Depth *`)) %>%
+  ungroup()
+
+# Remaining:  Santa Fe / fore, Santa Fe / back, Utila / back
+  # Replace remaining NAs in the column "Depth *" with an average of other "Depth *" for observations sharing the same Reef Zone (!!!: check replacing strategy)
+ff2_fish_hon <- ff2_fish_hon %>%
+  group_by(reef_zone) %>%
+  mutate(`Depth *` = ifelse(is.na(`Depth *`), mean(`Depth *`, na.rm = TRUE), `Depth *`)) %>%
+  ungroup()
+
+
+# Select NA values in "Size *"
+size_na_hon <- ff2_fish_hon %>%
+  filter(is.na(`Size *`))
+
+# Replace NAs in "Size *" with the group-wise average of "Size *" for the same "Fish name *"  (!!!: check replacing strategy)
+ff2_fish_hon <- ff2_fish_hon %>%
+  group_by(`Fish name *`) %>%
+  mutate(`Average Size` = mean(`Size *`, na.rm = TRUE), # Calculate the average size, excluding NA
+         `Size *` = ifelse(is.na(`Size *`), `Average Size`, `Size *`)) %>% # Replace NA with the average
+  select(-`Average Size`) %>% 
+  ungroup()
+
+
+
+##########
+
+# Select required fields
+selected_ff2_fish_hon <- ff2_fish_hon %>%
+  select("Site *",
+         "Management *",
+         "Sample date: Year *",
+         "Sample date: Month *",
+         "Sample date: Day *",
+         "Depth *",
+         "Transect number *",
+         "Transect length surveyed *",
+         "Width *",
+         "Fish size bin *",
+         "Observer emails *",
+         "Fish name *",
+         "Size *",
+         "Count *")
+
+
+# Check for NAs
+if (any(is.na(selected_ff2_fish_hon))) {
+  cat("There are still NAs present.\n")
+} else {
+  cat("Great, no NAs left!\n")
+}
+
+
+
+```
+
+
+### 3. Indonesia
+
+
+```{r}
+
+## Filter country == "Indonesia"
+ff2_fish_ind <- ff2_fish %>%
+  filter(country == "Indonesia")
+
+##########
+
+## Reformat the data to match the MERMAID template
+
+# Convert 'survey_date' to Date type
+ff2_fish_ind$survey_date <- as.Date(ff2_fish_ind$survey_date)
+# Create new columns for year, month, and day
+ff2_fish_ind <- ff2_fish_ind %>%
+  mutate(`Sample date: Year *` = year(survey_date),
+         `Sample date: Month *` = month(survey_date),
+         `Sample date: Day *` = day(survey_date))
+
+# Column Fish size bin *
+ff2_fish_ind <- ff2_fish_ind %>%
+  mutate(`Fish size bin *` = 1)
+
+# Column Size *
+ff2_fish_ind <- ff2_fish_ind %>%
+  rename(`Size *` = length)
+
+# Column Site *
+ff2_fish_ind <- ff2_fish_ind %>%
+  rename(`Site *` = location_name)
+
+# Column Depth *
+ff2_fish_ind <- ff2_fish_ind %>%
+  rename(`Depth *` = water_depth)
+
+# Column Transect length surveyed *
+ff2_fish_ind <- ff2_fish_ind %>%
+  mutate(`Transect length surveyed *` = 50)
+
+# Column Observer emails * 
+ff2_fish_ind <- ff2_fish_ind %>%
+  mutate(`Observer emails *` = "marianoviz1988@gmail.com")
+
+# Column Count *
+ff2_fish_ind <- ff2_fish_ind %>%
+  rename(`Count *` = count)
+
+# Column Management *
+ff2_fish_ind <- ff2_fish_ind %>%
+  rename(`Management *` = location_status)
+
+# Column Transect number  *
+ff2_fish_ind <- ff2_fish_ind %>%
+  rename(`Transect number *` = transect_no)
+
+# Column Width *
+ff2_fish_ind <- ff2_fish_ind %>%
+  mutate(`Width *` = "Mixed: >=10 cm & <35 cm @ 5 m, >=35 cm @ 20 m")
+
+# Column "Fish name *" 
+ff2_fish_ind <- ff2_fish_ind %>%
+  rename(`Fish name *` = species)
+
+# Column Reef slope
+ff2_fish_ind <- ff2_fish_ind %>%
+  rename(`Reef slope` = reef_slope)
+
+
+##########
+
+## NAs counts in required fields: 
+na_counts_ind <- ff2_fish_ind %>%
+  summarise(
+    `Management *` = sum(is.na(`Management *`)),
+    `Sample date: Year *` = sum(is.na(`Sample date: Year *`)),
+    `Sample date: Month *` = sum(is.na(`Sample date: Month *`)),
+    `Sample date: Day *` = sum(is.na(`Sample date: Day *`)),
+    `Depth *` = sum(is.na(`Depth *`)),
+    `Transect number *` = sum(is.na(`Transect number *`)),
+    `Transect length surveyed *` = sum(is.na(`Transect length surveyed *`)),
+    `Width *` = sum(is.na(`Width *`)),
+    `Fish size bin *` = sum(is.na(`Fish size bin *`)),
+    `Reef slope` = sum(is.na(`Reef slope`)),
+    `Observer emails *` = sum(is.na(`Observer emails *`)),
+    `Fish name *` = sum(is.na(`Fish name *`)),
+    `Size *` = sum(is.na(`Size *`)),
+    `Count *` = sum(is.na(`Count *`))
+  )
+
+
+##########
+
+# Select required fields
+selected_ff2_fish_ind <- ff2_fish_ind %>%
+  select("Site *",
+         "Management *",
+         "Sample date: Year *",
+         "Sample date: Month *",
+         "Sample date: Day *",
+         "Depth *",
+         "Transect number *",
+         "Transect length surveyed *",
+         "Width *",
+         "Fish size bin *",
+         "Observer emails *",
+         "Fish name *",
+         "Size *",
+         "Count *")
+
+
+# Check for NAs
+if (any(is.na(selected_ff2_fish_ind))) {
+  cat("There are still NAs present.\n")
+} else {
+  cat("Great, no NAs left!\n")
+}
+
+
+
+
+```
+
+
+
+### 4. Philippines
+
+
+```{r}
+## Filter country == "Philippines"
+ff2_fish_phi <- ff2_fish %>%
+  filter(country == "Philippines")
+
+##########
+
+## Reformat the data to match the MERMAID template
+
+# Convert 'survey_date' to Date type
+ff2_fish_phi$survey_date <- as.Date(ff2_fish_phi$survey_date)
+# Create new columns for year, month, and day
+ff2_fish_phi <- ff2_fish_phi %>%
+  mutate(`Sample date: Year *` = year(survey_date),
+         `Sample date: Month *` = month(survey_date),
+         `Sample date: Day *` = day(survey_date))
+
+# Column Fish size bin *
+ff2_fish_phi <- ff2_fish_phi %>%
+  mutate(`Fish size bin *` = 1)
+
+# Column Size *
+ff2_fish_phi <- ff2_fish_phi %>%
+  rename(`Size *` = length)
+
+# Column Site *
+ff2_fish_phi <- ff2_fish_phi %>%
+  rename(`Site *` = location_name)
+
+# Column Depth *
+ff2_fish_phi <- ff2_fish_phi %>%
+  rename(`Depth *` = water_depth)
+
+# Column Transect length surveyed *
+ff2_fish_phi <- ff2_fish_phi %>%
+  mutate(`Transect length surveyed *` = 50)
+
+# Column Observer emails * 
+ff2_fish_phi <- ff2_fish_phi %>%
+  mutate(`Observer emails *` = "marianoviz1988@gmail.com")
+
+# Column Count *
+ff2_fish_phi <- ff2_fish_phi %>%
+  rename(`Count *` = count)
+
+# Column Management *
+ff2_fish_phi <- ff2_fish_phi %>%
+  rename(`Management *` = location_status)
+
+# Column Transect number  *
+ff2_fish_phi <- ff2_fish_phi %>%
+  rename(`Transect number *` = transect_no)
+
+# Column Width *
+ff2_fish_phi <- ff2_fish_phi %>%
+  mutate(`Width *` = "Mixed: >=10 cm & <35 cm @ 5 m, >=35 cm @ 20 m")
+
+# Column "Fish name *" 
+ff2_fish_phi <- ff2_fish_phi %>%
+  rename(`Fish name *` = species)
+
+# Column Reef slope
+ff2_fish_phi <- ff2_fish_phi %>%
+  rename(`Reef slope` = reef_slope)
+
+
+##########
+
+
+## NAs counts in required fields: 
+na_counts_phi <- ff2_fish_phi %>%
+  summarise(
+    `Management *` = sum(is.na(`Management *`)),
+    `Sample date: Year *` = sum(is.na(`Sample date: Year *`)),
+    `Sample date: Month *` = sum(is.na(`Sample date: Month *`)),
+    `Sample date: Day *` = sum(is.na(`Sample date: Day *`)),
+    `Depth *` = sum(is.na(`Depth *`)),
+    `Transect number *` = sum(is.na(`Transect number *`)),
+    `Transect length surveyed *` = sum(is.na(`Transect length surveyed *`)),
+    `Width *` = sum(is.na(`Width *`)),
+    `Fish size bin *` = sum(is.na(`Fish size bin *`)),
+    `Observer emails *` = sum(is.na(`Observer emails *`)),
+    `Fish name *` = sum(is.na(`Fish name *`)),
+    `Size *` = sum(is.na(`Size *`)),
+    `Count *` = sum(is.na(`Count *`))
+  )
+
+# Missing dates???
+
+# Missing depth???
+
+
+```
+
+
+
+## Unique Sites: Latitude, Longitude, and Management Regime
+
+
+
+### 1. Mozambique
+
+```{r}
+# Site = location name or ma + location name ???
+
+# Get unique sites (location_name)
+ff2_fish_moz_sites <- ff2_fish_moz %>%
+  group_by(`Site *`, lat, lon, `Management *`) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+
+# Check for locations with the same name but different latitudes or longitudes
+locations_with_different_coords_moz <- ff2_fish_moz %>%
+  group_by(`Site *`) %>%
+  summarise(
+    Unique_Lats = n_distinct(lat),
+    Unique_Lons = n_distinct(lon),
+    .groups = "drop") %>%
+  filter(Unique_Lats > 1 | Unique_Lons > 1) # Filter for locations with more than one unique latitude or longitude
+
+
+distinct_coords_for_varied_locations_moz <- ff2_fish_moz %>%
+  group_by(`Site *`) %>%
+  distinct(`Site *`, lat, lon) %>%
+  ungroup() %>%
+  arrange(`Site *`, lat, lon)
+
+# Filter to keep only those locations with more than one unique combination of latitude and longitude
+locations_with_different_coords_moz_detail <- distinct_coords_for_varied_locations_moz %>%
+  add_count(`Site *`) %>%
+  filter(n > 1) %>%
+  select(-n) # remove the count column after filtering
+
+
+# Function to calculate the central point (mean lat and lon) for each site
+central_point <- function(df) {
+  central_points <- df %>%
+    group_by(`Site *`) %>%
+    summarise(
+      mean_lat = mean(lat, na.rm = TRUE),
+      mean_lon = mean(lon, na.rm = TRUE)
+    )
+  
+  return(central_points)
+}
+
+# Applying the function
+central_point_moz <- central_point(ff2_fish_moz)
+
+# Merge the central points
+ff2_fish_moz_sites_management <- central_point_moz %>%
+  left_join(ff2_fish_moz %>% select(`Site *`, `country`, `Management *`) %>% distinct(), by = "Site *")
+
+# Clean Sites
+selected_ff2_fish_moz_sites <- ff2_fish_moz_sites_management %>%
+  select(
+    name = `Site *`,
+    latitude = mean_lat,
+    longitude = mean_lon,
+    country = country) %>%
+  mutate(
+    notes = NA,
+    reef_type = NA,
+    reef_zone = NA,
+    exposure = NA) %>%
+  filter(name != "Test") #remove test or add lat and lon?
+
+# View Clean Sites
+selected_ff2_fish_moz_sites %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+```
+
+
+### 2. Honduras
+
+```{r}
+# Site = location name or ma + location name ???
+
+# Get unique sites (location_name)
+ff2_fish_hon_sites <- ff2_fish_hon %>%
+  group_by(`Site *`, lat, lon, `Management *`) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+
+# Check for locations with the same name but different latitudes or longitudes
+locations_with_different_coords_hon <- ff2_fish_hon %>%
+  group_by(`Site *`) %>%
+  summarise(
+    Unique_Lats = n_distinct(lat),
+    Unique_Lons = n_distinct(lon),
+    .groups = "drop") %>%
+  filter(Unique_Lats > 1 | Unique_Lons > 1) # Filter for locations with more than one unique latitude or longitude
+
+
+distinct_coords_for_varied_locations_hon <- ff2_fish_hon %>%
+  group_by(`Site *`) %>%
+  distinct(`Site *`, lat, lon) %>%
+  ungroup() %>%
+  arrange(`Site *`, lat, lon)
+
+# Filter to keep only those locations with more than one unique combination of latitude and longitude
+locations_with_different_coords_hon_detail <- distinct_coords_for_varied_locations_hon %>%
+  add_count(`Site *`) %>%
+  filter(n > 1) %>%
+  select(-n) # remove the count column after filtering
+
+
+
+# Applying the function
+central_point_hon <- central_point(ff2_fish_hon)
+
+# Merge the central points
+ff2_fish_hon_sites_management <- central_point_hon %>%
+  left_join(ff2_fish_hon %>% select(`Site *`, `country`, `Management *`) %>% distinct(), by = "Site *")
+
+# Clean Sites
+selected_ff2_fish_hon_sites <- ff2_fish_hon_sites_management %>%
+  select(
+    name = `Site *`,
+    latitude = mean_lat,
+    longitude = mean_lon,
+    country = country) %>%
+  mutate(
+    notes = NA,
+    reef_type = NA,
+    reef_zone = NA,
+    exposure = NA) %>%
+  filter(name != "Test") %>% #remove Test or add lat and lon?
+  filter(name != "Dive site 1") #remove Dive site 1 or add lat and lon?
+
+# View Clean Sites
+selected_ff2_fish_hon_sites %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+```
+
+
+### 3. Indonesia
+
+
+```{r}
+# Site = location name or ma + location name ???
+
+# Get unique sites (location_name)
+ff2_fish_ind_sites <- ff2_fish_ind %>%
+  group_by(`Site *`, lat, lon, `Management *`) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+
+# Check for locations with the same name but different latitudes or longitudes
+locations_with_different_coords_ind <- ff2_fish_ind %>%
+  group_by(`Site *`) %>%
+  summarise(
+    Unique_Lats = n_distinct(lat),
+    Unique_Lons = n_distinct(lon),
+    .groups = "drop") %>%
+  filter(Unique_Lats > 1 | Unique_Lons > 1) # Filter for locations with more than one unique latitude or longitude
+
+
+distinct_coords_for_varied_locations_ind <- ff2_fish_ind %>%
+  group_by(`Site *`) %>%
+  distinct(`Site *`, lat, lon) %>%
+  ungroup() %>%
+  arrange(`Site *`, lat, lon)
+
+# Filter to keep only those locations with more than one unique combination of latitude and longitude
+locations_with_different_coords_ind_detail <- distinct_coords_for_varied_locations_ind %>%
+  add_count(`Site *`) %>%
+  filter(n > 1) %>%
+  select(-n) # remove the count column after filtering
+
+
+
+# Applying the function
+central_point_ind <- central_point(ff2_fish_ind)
+
+# Merge the central points
+ff2_fish_ind_sites_management <- central_point_ind %>%
+  left_join(ff2_fish_ind %>% select(`Site *`, `country`, `Management *`) %>% distinct(), by = "Site *")
+
+# Clean Sites
+selected_ff2_fish_ind_sites <- ff2_fish_ind_sites_management %>%
+  select(
+    name = `Site *`,
+    latitude = mean_lat,
+    longitude = mean_lon,
+    country = country) %>%
+  mutate(
+    notes = NA,
+    reef_type = NA,
+    reef_zone = NA,
+    exposure = NA)
+
+# View Clean Sites
+selected_ff2_fish_ind_sites %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+```
+
+
+### 4. Philippines
+
+
+```{r}
+# Site = location name or ma + location name ???
+
+# Get unique sites (location_name)
+ff2_fish_phi_sites <- ff2_fish_phi %>%
+  group_by(`Site *`, lat, lon, `Management *`) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))  # should "A. Tambanan Fish Sanctuary" be "A: Tambanan Fish Sanctuary" ???
+                        # should "B. Tambanan Fish Sanctuary" be "B: Tambanan Fish Sanctuary" ???
+
+
+# Check for locations with the same name but different latitudes or longitudes
+locations_with_different_coords_phi <- ff2_fish_phi %>%
+  group_by(`Site *`) %>%
+  summarise(
+    Unique_Lats = n_distinct(lat),
+    Unique_Lons = n_distinct(lon),
+    .groups = "drop") %>%
+  filter(Unique_Lats > 1 | Unique_Lons > 1) # Filter for locations with more than one unique latitude or longitude
+
+
+distinct_coords_for_varied_locations_phi <- ff2_fish_phi %>%
+  group_by(`Site *`) %>%
+  distinct(`Site *`, lat, lon) %>%
+  ungroup() %>%
+  arrange(`Site *`, lat, lon)
+
+# Filter to keep only those locations with more than one unique combination of latitude and longitude
+locations_with_different_coords_phi_detail <- distinct_coords_for_varied_locations_phi %>%
+  add_count(`Site *`) %>%
+  filter(n > 1) %>%
+  select(-n) # remove the count column after filtering
+
+
+
+# Applying the function
+central_point_phi <- central_point(ff2_fish_phi)
+
+# Merge the central points
+ff2_fish_phi_sites_management <- central_point_phi %>%
+  left_join(ff2_fish_phi %>% select(`Site *`, `country`, `Management *`) %>% distinct(), by = "Site *")
+
+# Clean Sites 
+selected_ff2_fish_phi_sites <- ff2_fish_phi_sites_management %>%
+  select(
+    name = `Site *`,
+    latitude = mean_lat,
+    longitude = mean_lon,
+    country = country) %>%
+  mutate(
+    notes = NA,
+    reef_type = NA,
+    reef_zone = NA,
+    exposure = NA) %>% 
+  mutate(name = ifelse(name == "A. Tambanan Fish Sanctuary", 
+                       "A: Tambanan Fish Sanctuary", 
+                       name)) %>% # Should the name be changed ???
+  mutate(name = ifelse(name == "B. Tambanan Fish Sanctuary", 
+                       "B: Tambanan Fish Sanctuary", 
+                       name)) # Should the name be changed ???
+
+# View Clean Sites
+selected_ff2_fish_phi_sites %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+```
+
+
+
+
+
