@@ -1,0 +1,50 @@
+"ma_name","name","latitude","longitude","country","reef_type","reef_zone","reef_exposure"
+"Guanaja","glia2",16.4162,-85.8984,"Honduras","barrier","fore reef","exposed"
+"Guanaja","glia3",16.4248,-85.9044,"Honduras","patch","back reef","exposed"
+"Guanaja","gmca1",16.52,-85.85,"Honduras","barrier","fore reef","exposed"
+"Guanaja","gmia1",16.50798,-85.888898,"Honduras","barrier","crest","exposed"
+"Guanaja","gmia2",16.486,-85.91656,"Honduras","barrier","back reef","exposed"
+"Guanaja","glca1",NA,NA,"Honduras",NA,NA,NA
+"Guanaja","glca2",NA,NA,"Honduras",NA,NA,NA
+"Guanaja","glca4",NA,NA,"Honduras",NA,NA,NA
+"Guanaja","glia1",NA,NA,"Honduras",NA,NA,NA
+"Guanaja","gmc3",NA,NA,"Honduras",NA,NA,NA
+"Guanaja","gmca2",NA,NA,"Honduras",NA,NA,NA
+"Guanaja","gmia3",NA,NA,"Honduras",NA,NA,NA
+"Iriona and Limon","mil-1",NA,NA,"Honduras",NA,NA,NA
+"Iriona and Limon","mil-2",NA,NA,"Honduras",NA,NA,NA
+"Iriona and Limon","mil-3",NA,NA,"Honduras",NA,NA,NA
+"Puerto Cortes","1mbpc",15.9097,-87.9302,"Honduras","patch","fore reef","exposed"
+"Puerto Cortes","2mbpc",15.8872,-87.9368,"Honduras","patch","fore reef","exposed"
+"Puerto Cortes","4mbpc",15.8601,-88.0123,"Honduras","patch","fore reef","exposed"
+"Puerto Cortes","5mbpc",15.8388,-88.02,"Honduras","patch","fore reef","exposed"
+"Puerto Cortes","6mbpc",15.8425,-88.0025,"Honduras","patch","fore reef","exposed"
+"Puerto Cortes","7mbpc",15.825,-88.0234,"Honduras","patch","fore reef","exposed"
+"Puerto Cortes","8mbpc",15.8079,-87.9886,"Honduras","patch","fore reef","exposed"
+"Puerto Cortes","bajo_costa_azul_1",NA,NA,"Honduras",NA,NA,NA
+"Puerto Cortes","bajo_costa_azul_2",NA,NA,"Honduras",NA,NA,NA
+"Puerto Cortes","bajo_panama",NA,NA,"Honduras",NA,NA,NA
+"Roatan","10",NA,NA,"Honduras",NA,NA,NA
+"Roatan","17",NA,NA,"Honduras",NA,NA,NA
+"Roatan","18",NA,NA,"Honduras",NA,NA,NA
+"Roatan","19",NA,NA,"Honduras",NA,NA,NA
+"Roatan","20",NA,NA,"Honduras",NA,NA,NA
+"Roatan","21",NA,NA,"Honduras",NA,NA,NA
+"Roatan","22",NA,NA,"Honduras",NA,NA,NA
+"Roatan","6",NA,NA,"Honduras",NA,NA,NA
+"Roatan","7",NA,NA,"Honduras",NA,NA,NA
+"Roatan","point_6",NA,NA,"Honduras",NA,NA,NA
+"Roatan","punto__7",NA,NA,"Honduras",NA,NA,NA
+"Roatan","punto_10",NA,NA,"Honduras",NA,NA,NA
+"Roatan","punto_11",NA,NA,"Honduras",NA,NA,NA
+"Roatan","punto_17",NA,NA,"Honduras",NA,NA,NA
+"Roatan","punto_8",NA,NA,"Honduras",NA,NA,NA
+"Santa Fe","cayo_blanco",15.928,-86.037,"Honduras","patch","crest","sheltered"
+"Santa Fe","msf1",15.90337651,-86.19829663,"Honduras","patch","fore reef","exposed"
+"Santa Fe","msf2",15.89473318,-86.14831076,"Honduras","patch","bank","sheltered"
+"Trujillo","bajo_calderon_(2)",NA,NA,"Honduras",NA,NA,NA
+"Trujillo","bajo_calderon_(5)",NA,NA,"Honduras",NA,NA,NA
+"Trujillo","calderon_(4)",NA,NA,"Honduras",NA,NA,NA
+"Utila","uoca1",16.0604,-86.965,"Honduras","barrier","back reef","semi-exposed"
+"Utila","uoia2",16.0742,-86.9845,"Honduras","barrier","back reef","sheltered"
+"Utila","uwia2",16.0784,-87.0105,"Honduras","barrier","back reef","semi-exposed"

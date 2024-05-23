@@ -1,0 +1,1016 @@
+---
+title: "FF2.0_habitat Data Wrangling"
+author: "Mariano Viz"
+date: "2024-03-27"
+output: 
+  html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(tidyverse)
+library(here)
+library(lubridate)
+library(kableExtra)
+library(stringdist)
+
+```
+
+# Summary 
+
+#### To address:
+
+**1. Sites:**
+
+- Mozambique: add *latitude*, *longitude*, *reef type*, *reef zone*, and *exposure*
+
+- Honduras: add *latitude*, *longitude*, *reef type*, *reef zone*, and *exposure*
+
+- Indonesia: add *reef type*, *reef zone*, and *exposure*
+
+- Philippines: add *reef type*, *reef zone*, and *exposure*
+
+**2. Missing data in required fields**
+
+- Mozambique: add *Methodology*, *Depth*, and *Benthic Attribute*
+
+- Honduras: add *Methodology*, *Date*, *Depth*, and *Benthic Attribute*
+
+- Indonesia: add *Depth*, and *Benthic Attribute* (can get some from *old_attribute* - that's why I left that column)
+
+- Philippines: *Management*, *Date*, *Depth*, and *Benthic Attribute* (can get some from *old_attribute* - that's why I left that column)
+
+
+
+```{r}
+#Read in data
+ff2_habitat <- read_csv(here("Mermaid Ingest Data", "Historical","ff2_habitat.csv"))
+
+ff2_fish <- read_csv(here("Mermaid Ingest Data", "Historical","ff2_fish.csv"))
+
+```
+
+
+
+## Unique Sites: Latitude, Longitude, and Management Regime (comparison w/FF2.0_fish)
+
+### 1. Mozambique
+
+```{r}
+## Filter country == "Mozambique"
+ff2_habitat_moz <- ff2_habitat %>%
+  filter(country == "Mozambique")
+
+ff2_fish_moz <- ff2_fish %>%
+  filter(country == "Mozambique")
+
+
+##########
+
+# Get unique sites (location_name)
+ff2_habitat_moz_sites <- ff2_habitat_moz %>%
+  group_by(location_name, lat, lon, location_status) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+ff2_fish_moz_sites <- ff2_fish_moz %>%
+  group_by(location_name, lat, lon, location_status) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+# Check for locations with the same name but different latitudes or longitudes
+locations_with_different_coords_moz <- ff2_habitat_moz %>%
+  group_by(location_name) %>%
+  summarise(
+    Unique_Lats = n_distinct(lat),
+    Unique_Lons = n_distinct(lon),
+    .groups = "drop") %>%
+  filter(Unique_Lats > 1 | Unique_Lons > 1) # Filter for locations with more than one unique latitude or longitude
+
+
+# Check if sites from FF2.0_habitat match sites from FF2.0_fish
+unique_habitat_moz_sites <- setdiff(ff2_habitat_moz_sites$location_name, ff2_fish_moz_sites$location_name)
+
+if(length(unique_habitat_moz_sites) > 0) {
+  print("Sites present in ff2_habitat but not in ff2_fish:")
+  print(unique_habitat_moz_sites)
+} else {
+  print("All sites in ff2_habitat are also present in ff2_fish.")
+}
+
+
+##########
+
+# Check for the most similar site of FF2.0_fish for the unique sites in FF2.0_habitat
+
+# Prepare an empty dataframe to store results
+results_moz <- data.frame(unique_site_habitat = character(), closest_match_fish = character(), stringsAsFactors = FALSE)
+# Loop through each unique site to find the closest match
+for(site in unique_habitat_moz_sites) {
+  distances <- stringdist::stringdist(site, ff2_fish_moz_sites$location_name) # Calculate the string distance
+  min_distance_index <- which.min(distances)  # Find the index of the minimum distance
+  closest_match <- ff2_fish_moz_sites$location_name[min_distance_index] # Find the closest matching site name
+  results_moz <- rbind(results_moz, data.frame(unique_site_habitat = site, closest_match_fish = closest_match)) # Add to the results dataframe
+}
+
+# View Closest Match
+results_moz %>%
+  kable(caption = "Table 1. Unique sites in the ff2_habitat dataset and closest match from the ff2_fish dataset") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+##########
+
+# Clean Sites
+selected_ff2_habitat_moz_sites <- ff2_habitat_moz_sites %>%
+  select(
+    name = location_name,
+    latitude = lat,
+    longitude = lon,
+    management = location_status) %>%
+  mutate(
+    country = "Mozambique",
+    notes = NA,
+    reef_type = NA,
+    reef_zone = NA,
+    exposure = NA)
+
+# View Clean Sites
+selected_ff2_habitat_moz_sites %>%
+  kable(caption = "Table 2. Complete list of sites in the ff2_habitat dataset and required information") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+```
+
+
+
+
+
+
+
+### 2. Honduras
+
+```{r}
+## Filter country == "Honduras"
+ff2_habitat_hon <- ff2_habitat %>%
+  filter(country == "Honduras")
+
+ff2_fish_hon <- ff2_fish %>%
+  filter(country == "Honduras")
+
+
+##########
+
+# Get unique sites (location_name)
+ff2_habitat_hon_sites <- ff2_habitat_hon %>%
+  group_by(location_name, lat, lon, location_status) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+ff2_fish_hon_sites <- ff2_fish_hon %>%
+  group_by(location_name, lat, lon, location_status) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+# Check for locations with the same name but different latitudes or longitudes
+locations_with_different_coords_hon <- ff2_habitat_hon %>%
+  group_by(location_name) %>%
+  summarise(
+    Unique_Lats = n_distinct(lat),
+    Unique_Lons = n_distinct(lon),
+    .groups = "drop") %>%
+  filter(Unique_Lats > 1 | Unique_Lons > 1) # Filter for locations with more than one unique latitude or longitude
+
+
+# Check if sites from FF2.0_habitat match sites from FF2.0_fish
+unique_habitat_hon_sites <- setdiff(ff2_habitat_hon_sites$location_name, ff2_fish_hon_sites$location_name)
+
+if(length(unique_habitat_hon_sites) > 0) {
+  print("Sites present in ff2_habitat but not in ff2_fish:")
+  print(unique_habitat_hon_sites)
+} else {
+  print("All sites in ff2_habitat are also present in ff2_fish.")
+}
+
+
+##########
+
+# Check for the most similar site of FF2.0_fish for the unique sites in FF2.0_habitat
+
+# Prepare an empty dataframe to store results
+results_hon <- data.frame(unique_site_habitat = character(), closest_match_fish = character(), stringsAsFactors = FALSE)
+# Loop through each unique site to find the closest match
+for(site in unique_habitat_hon_sites) {
+  distances <- stringdist::stringdist(site, ff2_fish_hon_sites$location_name) # Calculate the string distance
+  min_distance_index <- which.min(distances)  # Find the index of the minimum distance
+  closest_match <- ff2_fish_hon_sites$location_name[min_distance_index] # Find the closest matching site name
+  results_hon <- rbind(results_hon, data.frame(unique_site_habitat = site, closest_match_fish = closest_match)) # Add to the results dataframe
+}
+
+# View Closest Match
+results_hon %>%
+  kable(caption = "Table 3. Unique sites in the ff2_habitat dataset and closest match from the ff2_fish dataset") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+##########
+
+# Clean Sites
+selected_ff2_habitat_hon_sites <- ff2_habitat_hon_sites %>%
+  select(
+    name = location_name,
+    latitude = lat,
+    longitude = lon,
+    management = location_status) %>%
+  mutate(
+    country = "Honduras",
+    notes = NA,
+    reef_type = NA,
+    reef_zone = NA,
+    exposure = NA)
+
+# Lat and Long are wrong!!
+names(selected_ff2_habitat_hon_sites)[names(selected_ff2_habitat_hon_sites) == "latitude"] <- "temp_column"
+names(selected_ff2_habitat_hon_sites)[names(selected_ff2_habitat_hon_sites) == "longitude"] <- "latitude"
+names(selected_ff2_habitat_hon_sites)[names(selected_ff2_habitat_hon_sites) == "temp_column"] <- "longitude"
+
+# View Clean Sites
+selected_ff2_habitat_hon_sites %>%
+  kable(caption = "Table 4. Complete list of sites in the ff2_habitat dataset and required information") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+```
+
+
+
+
+### 3. Indonesia
+
+```{r}
+## Filter country == "Indonesia"
+ff2_habitat_ind <- ff2_habitat %>%
+  filter(country == "Indonesia")
+
+ff2_fish_ind <- ff2_fish %>%
+  filter(country == "Indonesia")
+
+
+##########
+
+# Get unique sites (location_name)
+ff2_habitat_ind_sites <- ff2_habitat_ind %>%
+  group_by(location_name, lat, lon, location_status) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+ff2_fish_ind_sites <- ff2_fish_ind %>%
+  group_by(location_name, lat, lon, location_status) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+# Check for locations with the same name but different latitudes or longitudes
+locations_with_different_coords_ind <- ff2_habitat_ind %>%
+  group_by(location_name) %>%
+  summarise(
+    Unique_Lats = n_distinct(lat),
+    Unique_Lons = n_distinct(lon),
+    .groups = "drop") %>%
+  filter(Unique_Lats > 1 | Unique_Lons > 1) # Filter for locations with more than one unique latitude or longitude
+
+
+# Check if sites from FF2.0_habitat match sites from FF2.0_fish
+unique_habitat_ind_sites <- setdiff(ff2_habitat_ind_sites$location_name, ff2_fish_ind_sites$location_name)
+
+if(length(unique_habitat_ind_sites) > 0) {
+  print("Sites present in ff2_habitat but not in ff2_fish:")
+  print(unique_habitat_ind_sites)
+} else {
+  print("All sites in ff2_habitat are also present in ff2_fish.")
+}
+
+
+
+##########
+
+# Check for the most similar site of FF2.0_fish for the unique sites in FF2.0_habitat
+
+# Prepare an empty dataframe to store results
+results_ind <- data.frame(unique_site_habitat = character(), closest_match_fish = character(), stringsAsFactors = FALSE)
+# Loop through each unique site to find the closest match
+for(site in unique_habitat_ind_sites) {
+  distances <- stringdist::stringdist(site, ff2_fish_ind_sites$location_name) # Calculate the string distance
+  min_distance_index <- which.min(distances)  # Find the index of the minimum distance
+  closest_match <- ff2_fish_ind_sites$location_name[min_distance_index] # Find the closest matching site name
+  results_ind <- rbind(results_ind, data.frame(unique_site_habitat = site, closest_match_fish = closest_match)) # Add to the results dataframe
+}
+
+# View Closest Match
+results_ind %>%
+  kable(caption = "Table 5. Unique sites in the ff2_habitat dataset and closest match from the ff2_fish dataset") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+##########
+
+# Clean Sites
+selected_ff2_habitat_ind_sites <- ff2_habitat_ind_sites %>%
+  select(
+    name = location_name,
+    latitude = lat,
+    longitude = lon,
+    management = location_status) %>%
+  mutate(
+    country = "Indonesia",
+    notes = NA,
+    reef_type = NA,
+    reef_zone = NA,
+    exposure = NA)
+
+# View Clean Sites
+selected_ff2_habitat_ind_sites %>%
+  kable(caption = "Table 6. Complete list of sites in the ff2_habitat dataset and required information") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+
+```
+
+
+
+### 4. Philippines
+
+```{r}
+## Filter country == "Philippines"
+ff2_habitat_phi <- ff2_habitat %>%
+  filter(country == "Philippines")
+
+ff2_fish_phi <- ff2_fish %>%
+  filter(country == "Philippines")
+
+
+##########
+
+# Get unique sites (location_name)
+ff2_habitat_phi_sites <- ff2_habitat_phi %>%
+  group_by(location_name, lat, lon, location_status) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+ff2_fish_phi_sites <- ff2_fish_phi %>%
+  group_by(location_name, lat, lon, location_status) %>%
+  summarise(Count = n(), .groups = "drop")%>%
+  arrange(desc(Count))
+
+# Check for locations with the same name but different latitudes or longitudes
+locations_with_different_coords_phi <- ff2_habitat_phi %>%
+  group_by(location_name) %>%
+  summarise(
+    Unique_Lats = n_distinct(lat),
+    Unique_Lons = n_distinct(lon),
+    .groups = "drop") %>%
+  filter(Unique_Lats > 1 | Unique_Lons > 1) # Filter for locations with more than one unique latitude or longitude
+
+
+distinct_coords_for_varied_locations_phi <- ff2_habitat_phi %>%
+  group_by(location_name) %>%
+  distinct(location_name, lat, lon) %>%
+  ungroup() %>%
+  arrange(location_name, lat, lon)
+
+
+# Function to calculate the central point (mean lat and lon) for each site
+central_point <- function(df) {
+  central_points <- df %>%
+    group_by(location_name) %>%
+    summarise(
+      mean_lat = mean(lat, na.rm = TRUE),
+      mean_lon = mean(lon, na.rm = TRUE)
+    )
+  
+  return(central_points)
+}
+
+# Applying the function
+central_point_phi <- central_point(ff2_habitat_phi)
+
+# Merge the central points
+ff2_habitat_phi_sites_management <- central_point_phi %>%
+  left_join(ff2_habitat_phi %>% select(location_name, country, location_status) %>% distinct(), by = "location_name")
+
+
+
+
+# Check if sites from FF2.0_habitat match sites from FF2.0_fish
+unique_habitat_phi_sites <- setdiff(ff2_habitat_phi_sites$location_name, ff2_fish_phi_sites$location_name)
+unique_habitat_phi_sites <- unique_habitat_phi_sites[!is.na(unique_habitat_phi_sites)]
+
+if(length(unique_habitat_phi_sites) > 0) {
+  print("Sites present in ff2_habitat but not in ff2_fish:")
+  print(unique_habitat_phi_sites)
+} else {
+  print("All sites in ff2_habitat are also present in ff2_fish.")
+}
+
+
+
+
+
+##########
+
+# Check for the most similar site of FF2.0_fish for the unique sites in FF2.0_habitat
+
+# Prepare an empty dataframe to store results
+results_phi <- data.frame(unique_site_habitat = character(), closest_match_fish = character(), stringsAsFactors = FALSE)
+# Loop through each unique site to find the closest match
+for(site in unique_habitat_phi_sites) {
+  distances <- stringdist::stringdist(site, ff2_fish_phi_sites$location_name) # Calculate the string distance
+  min_distance_index <- which.min(distances)  # Find the index of the minimum distance
+  closest_match <- ff2_fish_phi_sites$location_name[min_distance_index] # Find the closest matching site name
+  results_phi <- rbind(results_phi, data.frame(unique_site_habitat = site, closest_match_fish = closest_match)) # Add to the results dataframe
+}
+
+# View Closest Match
+results_phi %>%
+  kable(caption = "Table 7. Unique sites in the ff2_habitat dataset and closest match from the ff2_fish dataset") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+
+
+##########
+
+# Clean Sites 
+selected_ff2_habitat_phi_sites <- ff2_habitat_phi_sites_management %>%
+  select(
+    name = location_name,
+    latitude = mean_lat,
+    longitude = mean_lon,
+    management = location_status,
+    country = country) %>%
+  mutate(
+    notes = NA,
+    reef_type = NA,
+    reef_zone = NA,
+    exposure = NA) %>%
+  filter(name != "NA")
+
+# View Clean Sites
+selected_ff2_habitat_phi_sites %>%
+  kable(caption = "Table 8. Complete list of sites in the ff2_habitat dataset and required information") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+```
+
+
+## Missing Data on Required Fields (by Country)
+
+### 1. Mozambique
+
+```{r}
+# Filter country == "Mozambique"
+ff2_habitat_moz <- ff2_habitat %>%
+  filter(country == "Mozambique")
+
+##########
+
+#Count methodology 
+ff2_habitat_moz_methodology <- ff2_habitat_moz %>%
+  count(methodology)
+
+# View methodology counts
+ff2_habitat_moz_methodology %>%
+  kable(caption = "Table 9. Methodology for the reef benthic community assessment") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+##########
+
+## Reformat the data to match the MERMAID template
+
+# Convert 'survey_date' to Date type
+ff2_habitat_moz$surveydate <- as.Date(ff2_habitat_moz$surveydate)
+# Create new columns for year, month, and day
+ff2_habitat_moz <- ff2_habitat_moz %>%
+  mutate(`Sample date: Year *` = year(surveydate),
+         `Sample date: Month *` = month(surveydate),
+         `Sample date: Day *` = day(surveydate))
+
+# Column Site *
+ff2_habitat_moz <- ff2_habitat_moz %>%
+  rename(`Site *` = location_name)
+
+# Column Management *
+ff2_habitat_moz <- ff2_habitat_moz %>%
+  rename(`Management *` = location_status)
+
+# Column Transect number  *
+ff2_habitat_moz <- ff2_habitat_moz %>%
+  rename(`Transect number *` = transect_no)
+
+# Column Depth *
+ff2_habitat_moz <- ff2_habitat_moz %>%
+  rename(`Depth *` = depth_m)
+
+# Column Benthic attribute  *
+ff2_habitat_moz <- ff2_habitat_moz %>%
+  mutate(`Benthic attribute *` = case_when(
+    is.na(genus) & is.na(species) ~ NA_character_,
+    is.na(genus) ~ species,
+    is.na(species) ~ genus,
+    TRUE ~ paste(genus, species)
+  ))
+
+# Column Methodology
+ff2_habitat_moz <- ff2_habitat_moz %>%
+  rename(`Methodology *` = methodology)
+
+selected_ff2_habitat_moz <- ff2_habitat_moz %>%
+  select(
+    "Methodology *",
+    "Site *",
+    "Management *",
+    "Sample date: Year *",
+    "Sample date: Month *",
+    "Sample date: Day *",
+    "Depth *",
+    "Transect number *",
+    "Benthic attribute *")
+
+##########
+
+## NAs counts in required fields:
+na_counts_moz <- ff2_habitat_moz %>%
+  summarise(
+    `Management *` = sum(is.na(`Management *`)),
+    `Sample date: Year *` = sum(is.na(`Sample date: Year *`)),
+    `Sample date: Month *` = sum(is.na(`Sample date: Month *`)),
+    `Sample date: Day *` = sum(is.na(`Sample date: Day *`)),
+    `Depth *` = sum(is.na(`Depth *`)),
+    `Transect number *` = sum(is.na(`Transect number *`)),
+    `Benthic attribute *` = sum(is.na(`Benthic attribute *`))
+  )
+
+na_counts_moz %>%
+  kable(caption = "Table 10. Counts of missing data in required fields") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+##########
+
+## Need to address: Methodology, Depth, Benthic Attribute !!! 
+
+
+```
+
+
+
+### 2. Honduras
+
+```{r}
+# Filter country == "Honduras"
+ff2_habitat_hon <- ff2_habitat %>%
+  filter(country == "Honduras")
+
+##########
+
+#Count methodology 
+ff2_habitat_hon_methodology <- ff2_habitat_hon %>%
+  count(methodology)
+
+# View methodology counts
+ff2_habitat_hon_methodology %>%
+  kable(caption = "Table 11. Methodology for the reef benthic community assessment") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+##########
+
+## Reformat the data to match the MERMAID template
+
+# Convert 'survey_date' to Date type
+ff2_habitat_hon$surveydate <- as.Date(ff2_habitat_hon$surveydate)
+# Create new columns for year, month, and day
+ff2_habitat_hon <- ff2_habitat_hon %>%
+  mutate(`Sample date: Year *` = year(surveydate),
+         `Sample date: Month *` = month(surveydate),
+         `Sample date: Day *` = day(surveydate))
+
+# Column Site *
+ff2_habitat_hon <- ff2_habitat_hon %>%
+  rename(`Site *` = location_name)
+
+# Column Management *
+ff2_habitat_hon <- ff2_habitat_hon %>%
+  rename(`Management *` = location_status)
+
+# Column Transect number  *
+ff2_habitat_hon <- ff2_habitat_hon %>%
+  rename(`Transect number *` = transect_no)
+
+# Column Depth *
+ff2_habitat_hon <- ff2_habitat_hon %>%
+  rename(`Depth *` = depth_m)
+
+# Column Benthic attribute  *
+ff2_habitat_hon <- ff2_habitat_hon %>%
+  mutate(`Benthic attribute *` = case_when(
+    is.na(genus) & is.na(species) ~ NA_character_,
+    is.na(genus) ~ species,
+    is.na(species) ~ genus,
+    TRUE ~ paste(genus, species)
+  ))
+
+# Column Methodology
+ff2_habitat_hon <- ff2_habitat_hon %>%
+  rename(`Methodology *` = methodology)
+
+selected_ff2_habitat_hon <- ff2_habitat_hon %>%
+  select(
+    "Methodology *",
+    "Site *",
+    "Management *",
+    "Sample date: Year *",
+    "Sample date: Month *",
+    "Sample date: Day *",
+    "Depth *",
+    "Transect number *",
+    "Benthic attribute *")
+
+##########
+
+## NAs counts in required fields:
+na_counts_hon <- ff2_habitat_hon %>%
+  summarise(
+    `Management *` = sum(is.na(`Management *`)),
+    `Sample date: Year *` = sum(is.na(`Sample date: Year *`)),
+    `Sample date: Month *` = sum(is.na(`Sample date: Month *`)),
+    `Sample date: Day *` = sum(is.na(`Sample date: Day *`)),
+    `Depth *` = sum(is.na(`Depth *`)),
+    `Transect number *` = sum(is.na(`Transect number *`)),
+    `Benthic attribute *` = sum(is.na(`Benthic attribute *`))
+  )
+
+na_counts_hon %>%
+  kable(caption = "Table 12. Counts of missing data in required fields") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+##########
+
+## Need to address: Methodology, Date, Depth, Benthic Attribute !!! 
+
+
+```
+
+
+
+
+
+### 3. Indonesia
+
+```{r}
+# Filter country == "Indonesia"
+ff2_habitat_ind <- ff2_habitat %>%
+  filter(country == "Indonesia")
+
+##########
+
+#Count methodology 
+ff2_habitat_ind_methodology <- ff2_habitat_ind %>%
+  count(methodology)
+
+# View methodology counts
+ff2_habitat_ind_methodology %>%
+  kable(caption = "Table 13. Methodology for the reef benthic community assessment") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+##########
+
+## Reformat the data to match the MERMAID template
+
+# Convert 'survey_date' to Date type
+ff2_habitat_ind$surveydate <- as.Date(ff2_habitat_ind$surveydate)
+# Create new columns for year, month, and day
+ff2_habitat_ind <- ff2_habitat_ind %>%
+  mutate(`Sample date: Year *` = year(surveydate),
+         `Sample date: Month *` = month(surveydate),
+         `Sample date: Day *` = day(surveydate))
+
+# Column Site *
+ff2_habitat_ind <- ff2_habitat_ind %>%
+  rename(`Site *` = location_name)
+
+# Column Management *
+ff2_habitat_ind <- ff2_habitat_ind %>%
+  rename(`Management *` = location_status)
+
+# Column Transect number  *
+ff2_habitat_ind <- ff2_habitat_ind %>%
+  rename(`Transect number *` = transect_no)
+
+# Column Depth *
+ff2_habitat_ind <- ff2_habitat_ind %>%
+  rename(`Depth *` = depth_m)
+
+# Column Benthic attribute  *
+ff2_habitat_ind <- ff2_habitat_ind %>%
+  mutate(`Benthic attribute *` = case_when(
+    is.na(genus) & is.na(species) ~ NA_character_,
+    is.na(genus) ~ species,
+    is.na(species) ~ genus,
+    TRUE ~ paste(genus, species)
+  ))
+
+
+# Column Methodology
+ff2_habitat_ind <- ff2_habitat_ind %>%
+  rename(`Methodology *` = methodology)
+
+selected_ff2_habitat_ind <- ff2_habitat_ind %>%
+  select(
+    "Methodology *",
+    "Site *",
+    "Management *",
+    "Sample date: Year *",
+    "Sample date: Month *",
+    "Sample date: Day *",
+    "Depth *",
+    "Transect number *",
+    "old_attribute",
+    "Benthic attribute *")
+
+##########
+
+## NAs counts in required fields:
+na_counts_ind <- ff2_habitat_ind %>%
+  summarise(
+    `Management *` = sum(is.na(`Management *`)),
+    `Sample date: Year *` = sum(is.na(`Sample date: Year *`)),
+    `Sample date: Month *` = sum(is.na(`Sample date: Month *`)),
+    `Sample date: Day *` = sum(is.na(`Sample date: Day *`)),
+    `Depth *` = sum(is.na(`Depth *`)),
+    `Transect number *` = sum(is.na(`Transect number *`)),
+    `Benthic attribute *` = sum(is.na(`Benthic attribute *`))
+  )
+
+na_counts_ind %>%
+  kable(caption = "Table 14. Counts of missing data in required fields") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+##########
+
+## Need to address: Depth, Benthic Attribute (can get some from old_attribute)!!! 
+
+
+```
+
+
+
+
+### 4. Philippines
+
+```{r}
+# Filter country == "Philippines"
+ff2_habitat_phi <- ff2_habitat %>%
+  filter(country == "Philippines")
+
+# Mutate n/a to NA
+ff2_habitat_phi <- ff2_habitat_phi %>%
+  mutate(across(where(is.character), ~na_if(.x, "n/a")))
+
+##########
+
+#Count methodology 
+ff2_habitat_phi_methodology <- ff2_habitat_phi %>%
+  count(methodology)
+
+# View methodology counts
+ff2_habitat_phi_methodology %>%
+  kable(caption = "Table 15. Methodology for the reef benthic community assessment") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+##########
+
+## Reformat the data to match the MERMAID template
+
+# Convert 'survey_date' to Date type
+ff2_habitat_phi$surveydate <- as.Date(ff2_habitat_phi$surveydate)
+# Create new columns for year, month, and day
+ff2_habitat_phi <- ff2_habitat_phi %>%
+  mutate(`Sample date: Year *` = year(surveydate),
+         `Sample date: Month *` = month(surveydate),
+         `Sample date: Day *` = day(surveydate))
+
+# Column Site *
+ff2_habitat_phi <- ff2_habitat_phi %>%
+  rename(`Site *` = location_name)
+
+# Column Management *
+ff2_habitat_phi <- ff2_habitat_phi %>%
+  rename(`Management *` = location_status)
+
+# Column Transect number  *
+ff2_habitat_phi <- ff2_habitat_phi %>%
+  rename(`Transect number *` = transect_no)
+
+# Column Depth *
+ff2_habitat_phi <- ff2_habitat_phi %>%
+  rename(`Depth *` = depth_m)
+
+# Column Benthic attribute  *
+ff2_habitat_phi <- ff2_habitat_phi %>%
+  mutate(`Benthic attribute *` = case_when(
+    is.na(genus) & is.na(species) ~ NA_character_,
+    is.na(genus) ~ species,
+    is.na(species) ~ genus,
+    TRUE ~ paste(genus, species)
+  ))
+
+
+# Column Methodology
+ff2_habitat_phi <- ff2_habitat_phi %>%
+  rename(`Methodology *` = methodology)
+
+selected_ff2_habitat_phi <- ff2_habitat_phi %>%
+  select(
+    "Methodology *",
+    "Site *",
+    "Management *",
+    "Sample date: Year *",
+    "Sample date: Month *",
+    "Sample date: Day *",
+    "Depth *",
+    "Transect number *",
+    "old_attribute",
+    "Benthic attribute *")
+
+##########
+
+## NAs counts in required fields:
+na_counts_phi <- ff2_habitat_phi %>%
+  summarise(
+    `Management *` = sum(is.na(`Management *`)),
+    `Sample date: Year *` = sum(is.na(`Sample date: Year *`)),
+    `Sample date: Month *` = sum(is.na(`Sample date: Month *`)),
+    `Sample date: Day *` = sum(is.na(`Sample date: Day *`)),
+    `Depth *` = sum(is.na(`Depth *`)),
+    `Transect number *` = sum(is.na(`Transect number *`)),
+    `Benthic attribute *` = sum(is.na(`Benthic attribute *`))
+  )
+
+na_counts_phi %>%
+  kable(caption = "Table 16. Counts of missing data in required fields") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+##########
+
+## Need to address: Management, Date, Depth, and Benthic Attribute (can get some from old_attribute)!!! 
+
+
+```
+
+
+
+```{r}
+# Exporting csv docs:
+
+
+# Fields and Sites Mozambique
+#write.csv(selected_ff2_habitat_moz_sites, "mermaid_sites_ff2_habitat_moz.csv", row.names = FALSE)
+#write.csv(selected_ff2_habitat_moz, "mermaid_fields_ff2_habitat_moz.csv", row.names = FALSE)
+
+# Fields and Sites Honduras
+#write.csv(selected_ff2_habitat_hon_sites, "mermaid_sites_ff2_habitat_hon.csv", row.names = FALSE)
+#write.csv(selected_ff2_habitat_hon, "mermaid_fields_ff2_habitat_hon.csv", row.names = FALSE)
+
+# Fields and Sites Indonesia
+#write.csv(selected_ff2_habitat_ind_sites, "mermaid_sites_ff2_habitat_ind.csv", row.names = FALSE)
+#write.csv(selected_ff2_habitat_ind, "mermaid_fields_ff2_habitat_ind.csv", row.names = FALSE)
+
+# Fields and Sites Philippines
+#write.csv(selected_ff2_habitat_phi_sites, "mermaid_sites_ff2_habitat_phi.csv", row.names = FALSE)
+#write.csv(selected_ff2_habitat_phi, "mermaid_fields_ff2_habitat_phi.csv", row.names = FALSE)
+
+
+```
+
+## Unique Sites:comparison w/fish-surveys-MERMAID.csv
+
+### Read in data
+
+```{r}
+fs_mermaid <- read_csv(here("Mermaid Ingest Data", "fish-surveys-MERMAID.csv"))
+```
+
+
+### 1. Mozambique and Indonesia
+
+```{r}
+
+# No data for Mozambique and Indonesia
+fs_mermaid_country <- fs_mermaid %>%
+  distinct(country) %>%
+  pull(country)
+fs_mermaid_country
+
+fs_mermaid_counts <- fs_mermaid %>%
+  count(country)
+fs_mermaid_counts
+
+```
+
+### 2. Honduras
+
+```{r}
+
+selected_ff2_habitat_hon_sites
+
+fs_mermaid_hon <- fs_mermaid %>%
+  filter(country == "Honduras")
+
+# Add closes match to selected_ff2_habitat_hon_sites$name
+  # Create an empty vector to store closest matches
+  closest_matches <- character(length(selected_ff2_habitat_hon_sites$name))
+  
+  # Loop through each site name in selected_ff2_habitat_hon_sites
+  for (i in seq_along(selected_ff2_habitat_hon_sites$name)) {
+    # Get the current site name
+    site_name <- selected_ff2_habitat_hon_sites$name[i]
+    
+    # Calculate the string distances between the current site name and all site names in fs_mermaid_hon
+    distances <- stringdist::stringdist(site_name, fs_mermaid_hon$site)
+    
+    # Find the index of the closest match
+    closest_match_index <- which.min(distances)
+    
+    # Get the closest match
+    closest_match <- fs_mermaid_hon$site[closest_match_index]
+    
+    # Store the closest match in the vector
+    closest_matches[i] <- closest_match
+  }
+  
+  # Add the closest matches to selected_ff2_habitat_hon_sites as a new column
+  selected_ff2_habitat_hon_sites$closest_match <- closest_matches
+  
+  # View the updated dataset with closest matches
+  print(selected_ff2_habitat_hon_sites)
+  
+  closest_match_hon <- selected_ff2_habitat_hon_sites %>% 
+    select("name", "closest_match") 
+  
+#Check unique sites in mermaid data
+unique_sites <- unique(fs_mermaid_hon$site)
+unique_sites
+selected_ff2_habitat_hon_sites
+
+
+```
+### 3. Philippines 
+
+```{r}
+
+fs_mermaid_phi <- fs_mermaid %>%
+  filter(country == "Philippines")
+
+# Add closes match to selected_ff2_habitat_hon_sites$name
+  # Create an empty vector to store closest matches
+  closest_matches <- character(length(selected_ff2_habitat_phi_sites$name))
+  
+  # Loop through each site name in selected_ff2_habitat_hon_sites
+  for (i in seq_along(selected_ff2_habitat_phi_sites$name)) {
+    # Get the current site name
+    site_name <- selected_ff2_habitat_phi_sites$name[i]
+    
+    # Calculate the string distances between the current site name and all site names in fs_mermaid_hon
+    distances <- stringdist::stringdist(site_name, fs_mermaid_phi$site)
+    
+    # Find the index of the closest match
+    closest_match_index <- which.min(distances)
+    
+    # Get the closest match
+    closest_match <- fs_mermaid_phi$site[closest_match_index]
+    
+    # Store the closest match in the vector
+    closest_matches[i] <- closest_match
+  }
+  
+  # Add the closest matches to selected_ff2_habitat_hon_sites as a new column
+  selected_ff2_habitat_phi_sites$closest_match <- closest_matches
+  
+  # View the updated dataset with closest matches
+  print(selected_ff2_habitat_phi_sites)
+  
+  closest_match_phi <- selected_ff2_habitat_phi_sites %>% 
+    select("name", "closest_match") 
+  
+
+```
+

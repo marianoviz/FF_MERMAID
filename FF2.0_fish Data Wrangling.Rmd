@@ -118,6 +118,10 @@ na_counts_moz <- ff2_fish_moz %>%
     `Count *` = sum(is.na(`Count *`))
   )
 
+na_counts_moz %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
 
 # Select rows with NA values in any of the specified columns
 rows_with_na_moz <- ff2_fish_moz %>%
@@ -267,6 +271,10 @@ na_counts_hon <- ff2_fish_hon %>%
     `Size *` = sum(is.na(`Size *`)),
     `Count *` = sum(is.na(`Count *`))
   )
+
+na_counts_hon %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
 
 
 # Select NA values in "Depth *" --> 1082 observations
@@ -432,6 +440,10 @@ na_counts_ind <- ff2_fish_ind %>%
     `Count *` = sum(is.na(`Count *`))
   )
 
+na_counts_ind %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
 
 ##########
 
@@ -483,7 +495,7 @@ ff2_fish_phi <- ff2_fish %>%
 ff2_fish_phi$survey_date <- as.Date(ff2_fish_phi$survey_date)
 # Create new columns for year, month, and day
 ff2_fish_phi <- ff2_fish_phi %>%
-  mutate(`Sample date: Year *` = year(survey_date),
+  mutate(`Sample date: Year *` = ff2_fish_phi$year,
          `Sample date: Month *` = month(survey_date),
          `Sample date: Day *` = day(survey_date))
 
@@ -557,9 +569,42 @@ na_counts_phi <- ff2_fish_phi %>%
     `Count *` = sum(is.na(`Count *`))
   )
 
-# Missing dates???
+na_counts_phi %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+
+selected_ff2_fish_phi <- ff2_fish_phi %>%
+  select("Site *",
+         "Management *",
+         "Sample date: Year *",
+         "Sample date: Month *",
+         "Sample date: Day *",
+         "Depth *",
+         "Transect number *",
+         "Transect length surveyed *",
+         "Width *",
+         "Fish size bin *",
+         "Observer emails *",
+         "Fish name *",
+         "Size *",
+         "Count *")
+
+# Check for NAs
+if (any(is.na(selected_ff2_fish_phi))) {
+  cat("There are still NAs present.\n")
+} else {
+  cat("Great, no NAs left!\n")
+}
+
+
+
+
+# Missing dates (month and day)???
 
 # Missing depth???
+
+
 
 
 ```
@@ -850,5 +895,24 @@ selected_ff2_fish_phi_sites %>%
 
 
 
+```{r}
+# Exporting csv docs:
+
+
+# Sites Mozambique
+#write.csv(selected_ff2_fish_moz_sites, "mermaid_sites_ff2_fish_moz.csv", row.names = FALSE)
+
+# Sites Honduras
+#write.csv(selected_ff2_fish_hon_sites, "mermaid_sites_ff2_fish_hon.csv", row.names = FALSE)
+
+# Sites Indonesia
+#write.csv(selected_ff2_fish_ind_sites, "mermaid_sites_ff2_fish_ind.csv", row.names = FALSE)
+
+# Fields and Sites Philippines
+#write.csv(selected_ff2_fish_phi, "mermaid_fields_ff2_fish_phi.csv", row.names = FALSE)
+#write.csv(selected_ff2_fish_phi_sites, "mermaid_sites_ff2_fish_phi.csv", row.names = FALSE)
+
+
+```
 
 

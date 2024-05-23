@@ -674,8 +674,104 @@ na_counts_moz &lt;- ff2_fish_moz %&gt;%
     `Count *` = sum(is.na(`Count *`))
   )
 
-
-# Select rows with NA values in any of the specified columns
+na_counts_moz %&gt;%
+  kable() %&gt;%
+  kable_styling(bootstrap_options = &quot;striped&quot;, full_width = FALSE)</code></pre>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+Management *
+</th>
+<th style="text-align:right;">
+Sample date: Year *
+</th>
+<th style="text-align:right;">
+Sample date: Month *
+</th>
+<th style="text-align:right;">
+Sample date: Day *
+</th>
+<th style="text-align:right;">
+Depth *
+</th>
+<th style="text-align:right;">
+Transect number *
+</th>
+<th style="text-align:right;">
+Transect length surveyed *
+</th>
+<th style="text-align:right;">
+Width *
+</th>
+<th style="text-align:right;">
+Fish size bin *
+</th>
+<th style="text-align:right;">
+Reef slope
+</th>
+<th style="text-align:right;">
+Observer emails *
+</th>
+<th style="text-align:right;">
+Fish name *
+</th>
+<th style="text-align:right;">
+Size *
+</th>
+<th style="text-align:right;">
+Count *
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># Select rows with NA values in any of the specified columns
 rows_with_na_moz &lt;- ff2_fish_moz %&gt;%
   filter(is.na(`Management *`) | 
            is.na(`Sample date: Year *`) | 
@@ -820,8 +916,98 @@ na_counts_hon &lt;- ff2_fish_hon %&gt;%
     `Count *` = sum(is.na(`Count *`))
   )
 
-
-# Select NA values in &quot;Depth *&quot; --&gt; 1082 observations
+na_counts_hon %&gt;%
+  kable() %&gt;%
+  kable_styling(bootstrap_options = &quot;striped&quot;, full_width = FALSE)</code></pre>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+Management *
+</th>
+<th style="text-align:right;">
+Sample date: Year *
+</th>
+<th style="text-align:right;">
+Sample date: Month *
+</th>
+<th style="text-align:right;">
+Sample date: Day *
+</th>
+<th style="text-align:right;">
+Depth *
+</th>
+<th style="text-align:right;">
+Transect number *
+</th>
+<th style="text-align:right;">
+Transect length surveyed *
+</th>
+<th style="text-align:right;">
+Width *
+</th>
+<th style="text-align:right;">
+Fish size bin *
+</th>
+<th style="text-align:right;">
+Observer emails *
+</th>
+<th style="text-align:right;">
+Fish name *
+</th>
+<th style="text-align:right;">
+Size *
+</th>
+<th style="text-align:right;">
+Count *
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1082
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># Select NA values in &quot;Depth *&quot; --&gt; 1082 observations
 depth_na_hon &lt;- ff2_fish_hon %&gt;%
   filter(is.na(`Depth *`)) # What should we do here?
 
@@ -977,8 +1163,104 @@ na_counts_ind &lt;- ff2_fish_ind %&gt;%
     `Count *` = sum(is.na(`Count *`))
   )
 
-
-##########
+na_counts_ind %&gt;%
+  kable() %&gt;%
+  kable_styling(bootstrap_options = &quot;striped&quot;, full_width = FALSE)</code></pre>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+Management *
+</th>
+<th style="text-align:right;">
+Sample date: Year *
+</th>
+<th style="text-align:right;">
+Sample date: Month *
+</th>
+<th style="text-align:right;">
+Sample date: Day *
+</th>
+<th style="text-align:right;">
+Depth *
+</th>
+<th style="text-align:right;">
+Transect number *
+</th>
+<th style="text-align:right;">
+Transect length surveyed *
+</th>
+<th style="text-align:right;">
+Width *
+</th>
+<th style="text-align:right;">
+Fish size bin *
+</th>
+<th style="text-align:right;">
+Reef slope
+</th>
+<th style="text-align:right;">
+Observer emails *
+</th>
+<th style="text-align:right;">
+Fish name *
+</th>
+<th style="text-align:right;">
+Size *
+</th>
+<th style="text-align:right;">
+Count *
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+416
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>##########
 
 # Select required fields
 selected_ff2_fish_ind &lt;- ff2_fish_ind %&gt;%
@@ -1094,7 +1376,98 @@ na_counts_phi &lt;- ff2_fish_phi %&gt;%
     `Count *` = sum(is.na(`Count *`))
   )
 
-# Missing dates???
+na_counts_phi %&gt;%
+  kable() %&gt;%
+  kable_styling(bootstrap_options = &quot;striped&quot;, full_width = FALSE)</code></pre>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+Management *
+</th>
+<th style="text-align:right;">
+Sample date: Year *
+</th>
+<th style="text-align:right;">
+Sample date: Month *
+</th>
+<th style="text-align:right;">
+Sample date: Day *
+</th>
+<th style="text-align:right;">
+Depth *
+</th>
+<th style="text-align:right;">
+Transect number *
+</th>
+<th style="text-align:right;">
+Transect length surveyed *
+</th>
+<th style="text-align:right;">
+Width *
+</th>
+<th style="text-align:right;">
+Fish size bin *
+</th>
+<th style="text-align:right;">
+Observer emails *
+</th>
+<th style="text-align:right;">
+Fish name *
+</th>
+<th style="text-align:right;">
+Size *
+</th>
+<th style="text-align:right;">
+Count *
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+137009
+</td>
+<td style="text-align:right;">
+137009
+</td>
+<td style="text-align:right;">
+137009
+</td>
+<td style="text-align:right;">
+150532
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># Missing dates???
 
 # Missing depth???</code></pre>
 </div>

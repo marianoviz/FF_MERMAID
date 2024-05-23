@@ -1,0 +1,375 @@
+---
+title: "FF2.0 Sites"
+author: "Mariano Viz"
+date: "2024-05-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(tidyverse)
+library(here)
+library(lubridate)
+library(kableExtra)
+library(stringdist)
+library(writexl)
+
+```
+
+
+## Read in data
+
+```{r}
+#Read in data
+
+#FF2.0 dataset
+ff2_fish <- read_csv(here("Mermaid Ingest Data", "Historical","ff2_fish.csv"))
+ff2_habitat <- read_csv(here("Mermaid Ingest Data", "Historical","ff2_habitat.csv"))
+
+#MERMAID Sites
+sites_mermaid <- read_csv(here("Mermaid Ingest Data", "fish-surveys-MERMAID.csv"))
+
+#Mozambique
+sites_moz_fish <- read_csv(here("csv files", "mermaid_sites_ff2_fish_moz.csv"))
+sites_moz_habitat <- read_csv(here("csv files", "mermaid_sites_ff2_habitat_moz.csv"))
+
+#Honduras
+sites_hon_fish <- read_csv(here("csv files", "mermaid_sites_ff2_fish_hon.csv"))
+sites_hon_habitat <- read_csv(here("csv files", "mermaid_sites_ff2_habitat_hon.csv"))
+
+#Indonesia
+sites_ind_fish <- read_csv(here("csv files", "mermaid_sites_ff2_fish_ind.csv"))
+sites_ind_habitat <- read_csv(here("csv files", "mermaid_sites_ff2_habitat_ind.csv"))
+
+#Philippines
+sites_phi_fish <- read_csv(here("csv files", "mermaid_sites_ff2_fish_phi.csv"))
+sites_phi_habitat <- read_csv(here("csv files", "mermaid_sites_ff2_habitat_phi.csv"))
+
+```
+
+
+
+## Sites (by Country)
+
+### 1. Mozambique
+
+```{r}
+# Filter MERMAID Sites country == "Mozambique"
+sites_mermaid_moz <- sites_mermaid %>%
+  filter(country == "Mozambique") #No observations for Mozambique!
+
+# Add the MA name to make it easier for the country teams to update the information
+  # Fish
+sites_moz_fish <- sites_moz_fish %>%
+  left_join(ff2_fish %>% select(location_name, ma_name), by = c("name" = "location_name")) %>%
+  distinct(name, .keep_all = TRUE) %>% 
+  select(ma_name, name, latitude, longitude, country, reef_type, reef_zone, exposure) %>% 
+  arrange(ma_name)%>% 
+  rename(reef_exposure = exposure)
+    # Cleaning location names
+sites_moz_fish <- sites_moz_fish %>%
+  mutate(name = tolower(name)) %>% #All to lowercase to avoid duplicates based on using uppercase 
+  mutate(name = gsub(" ", "_", name)) %>% #Change spaces to _ to avoid duplicates
+  distinct(name, .keep_all = TRUE)
+
+  # Habitat
+sites_moz_habitat <- sites_moz_habitat %>%
+  left_join(ff2_habitat %>% select(location_name, sitename), by = c("name" = "location_name")) %>%
+  distinct(name, .keep_all = TRUE) %>% 
+  select(sitename, name, latitude, longitude, country, reef_type, reef_zone, exposure) %>% 
+  arrange(sitename)%>%
+  rename(site_name = sitename) %>% 
+  rename(reef_exposure = exposure)
+    # Cleaning location names
+sites_moz_habitat <- sites_moz_habitat %>%
+  mutate(name = tolower(name)) %>% #All to lowercase to avoid duplicates based on using uppercase 
+  mutate(name = gsub(" ", "_", name)) %>% #Change spaces to _ to avoid duplicates
+  distinct(name, .keep_all = TRUE)
+
+
+```
+
+
+
+### 2. Honduras
+
+```{r}
+# Filter MERMAID Sites country == "Honduras"
+sites_mermaid_hon <- sites_mermaid %>%
+  filter(country == "Honduras") %>%
+  mutate(site = tolower(site)) %>% #All to lowercase to avoid duplicates based on using uppercase 
+  mutate(site = gsub(" ", "_", site)) %>% #Change spaces to _ to avoid duplicates
+  distinct(site, .keep_all = TRUE) %>% 
+  select(site, latitude, longitude, country, reef_type, reef_zone, reef_exposure)
+
+
+# Add the MA name to make it easier for the country teams to update the information
+  # Fish
+sites_hon_fish <- sites_hon_fish %>%
+  left_join(ff2_fish %>% select(location_name, ma_name), by = c("name" = "location_name")) %>%
+  distinct(name, .keep_all = TRUE) %>% 
+  select(ma_name, name, latitude, longitude, country, reef_type, reef_zone, exposure) %>%
+  arrange(ma_name) %>% 
+  rename(reef_exposure = exposure)
+    # Cleaning location names
+sites_hon_fish <- sites_hon_fish %>%
+  mutate(name = tolower(name)) %>% #All to lowercase to avoid duplicates based on using uppercase 
+  mutate(name = gsub(" ", "_", name)) %>% #Change spaces to _ to avoid duplicates
+  distinct(name, .keep_all = TRUE)
+  
+    # Lat and Long were wrong in the FF2.0 dataset!!!
+sites_hon_fish <- sites_hon_fish %>%
+  mutate(latitude = NA,
+         longitude = NA)
+
+
+# Perform the left join to combine the datasets
+merged_sites_hon_fish <- sites_hon_fish %>%
+  left_join(sites_mermaid_hon, by = c("name" = "site"), suffix = c("_fish", "_mermaid"))
+
+# Update the relevant columns in sites_hon_fish with the values from sites_mermaid_hon
+sites_hon_fish <- merged_sites_hon_fish %>%
+  mutate(latitude = coalesce(latitude_mermaid, latitude_fish),
+         longitude = coalesce(longitude_mermaid, longitude_fish),
+         reef_type = coalesce(reef_type_mermaid, reef_type_fish),
+         reef_zone = coalesce(reef_zone_mermaid, reef_zone_fish),
+         reef_exposure = coalesce(reef_exposure_mermaid, reef_exposure_fish)) %>%
+  select(ma_name, name, latitude, longitude, country_fish, reef_type, reef_zone, reef_exposure) %>% 
+  rename(country = country_fish)
+
+
+
+  # Habitat
+sites_hon_habitat <- sites_hon_habitat %>%
+  left_join(ff2_habitat %>% select(location_name, sitename), by = c("name" = "location_name")) %>%
+  distinct(name, .keep_all = TRUE) %>% 
+  select(sitename, name, latitude, longitude, country, reef_type, reef_zone, exposure) %>% 
+  arrange(sitename)%>%
+  rename(site_name = sitename)%>% 
+  rename(reef_exposure = exposure)
+    # Cleaning location names
+sites_hon_habitat <- sites_hon_habitat %>%
+  mutate(name = tolower(name)) %>% #All to lowercase to avoid duplicates based on using uppercase 
+  mutate(name = gsub(" ", "_", name)) %>% #Change spaces to _ to avoid duplicates
+  distinct(name, .keep_all = TRUE)
+
+   # Lat and Long were wrong in the FF2.0 dataset!!!
+sites_hon_habitat <- sites_hon_habitat %>%
+  mutate(latitude = NA,
+         longitude = NA)
+
+
+# Perform the left join to combine the datasets
+merged_sites_hon_habitat <- sites_hon_habitat %>%
+  left_join(sites_mermaid_hon, by = c("name" = "site"), suffix = c("_fish", "_mermaid"))
+
+# Update the relevant columns in sites_hon_fish with the values from sites_mermaid_hon
+sites_hon_habitat <- merged_sites_hon_habitat %>%
+  mutate(latitude = coalesce(latitude_mermaid, latitude_fish),
+         longitude = coalesce(longitude_mermaid, longitude_fish),
+         reef_type = coalesce(reef_type_mermaid, reef_type_fish),
+         reef_zone = coalesce(reef_zone_mermaid, reef_zone_fish),
+         reef_exposure = coalesce(reef_exposure_mermaid, reef_exposure_fish)) %>%
+  select(site_name, name, latitude, longitude, country_fish, reef_type, reef_zone, reef_exposure) %>% 
+  rename(country = country_fish)
+
+
+```
+
+
+
+### 3. Indonesia
+
+```{r}
+# Filter MERMAID Sites country == "Indonesia"
+sites_mermaid_ind <- sites_mermaid %>%
+  filter(country == "Indonesia") #No observations for Indonesia!
+
+
+# Add the MA name to make it easier for the country teams to update the information
+  # Fish
+sites_ind_fish <- sites_ind_fish %>%
+  left_join(ff2_fish %>% select(location_name, ma_name), by = c("name" = "location_name")) %>%
+  distinct(name, .keep_all = TRUE) %>% 
+  select(ma_name, name, latitude, longitude, country, reef_type, reef_zone, exposure) %>%
+  arrange(ma_name) %>% 
+  rename(reef_exposure = exposure)
+    # Cleaning location names
+sites_ind_fish <- sites_ind_fish %>%
+  mutate(name = tolower(name)) %>% #All to lowercase to avoid duplicates based on using uppercase 
+  mutate(name = gsub(" ", "_", name)) %>% #Change spaces to _ to avoid duplicates
+  distinct(name, .keep_all = TRUE)
+  
+
+
+  # Habitat
+sites_ind_habitat <- sites_ind_habitat %>%
+  left_join(ff2_habitat %>% select(location_name, sitename), by = c("name" = "location_name")) %>%
+  distinct(name, .keep_all = TRUE) %>% 
+  select(sitename, name, latitude, longitude, country, reef_type, reef_zone, exposure) %>% 
+  arrange(sitename)%>%
+  rename(site_name = sitename)%>% 
+  rename(reef_exposure = exposure)
+    # Cleaning location names
+sites_ind_habitat <- sites_ind_habitat %>%
+  mutate(name = tolower(name)) %>% #All to lowercase to avoid duplicates based on using uppercase 
+  mutate(name = gsub(" ", "_", name)) %>% #Change spaces to _ to avoid duplicates
+  distinct(name, .keep_all = TRUE)
+
+  
+
+```
+
+
+### 4. Philippines 
+
+```{r}
+# Filter MERMAID Sites country == "Philippines"
+sites_mermaid_phi <- sites_mermaid %>%
+  filter(country == "Philippines") %>%
+  mutate(site = tolower(site)) %>% #All to lowercase to avoid duplicates based on using uppercase 
+  mutate(site = gsub(" ", "_", site)) %>% #Change spaces to _ to avoid duplicates
+  distinct(site, .keep_all = TRUE) %>% 
+  select(site, latitude, longitude, country, reef_type, reef_zone, reef_exposure)
+
+
+# Add the MA name to make it easier for the country teams to update the information
+  # Fish
+sites_phi_fish <- sites_phi_fish %>%
+  left_join(ff2_fish %>% select(location_name, ma_name), by = c("name" = "location_name")) %>%
+  distinct(name, .keep_all = TRUE) %>% 
+  select(ma_name, name, latitude, longitude, country, reef_type, reef_zone, exposure) %>%
+  arrange(ma_name) %>% 
+  rename(reef_exposure = exposure)
+    # Cleaning location names
+sites_phi_fish <- sites_phi_fish %>%
+  mutate(name = tolower(name)) %>% #All to lowercase to avoid duplicates based on using uppercase 
+  mutate(name = gsub(" ", "_", name)) %>% #Change spaces to _ to avoid duplicates
+  distinct(name, .keep_all = TRUE)
+  
+
+# Perform the left join to combine the datasets
+merged_sites_phi_fish <- sites_phi_fish %>%
+  left_join(sites_mermaid_phi, by = c("name" = "site"), suffix = c("_fish", "_mermaid"))
+
+# Update the relevant columns in sites_hon_fish with the values from sites_mermaid_hon
+sites_phi_fish <- merged_sites_phi_fish %>%
+  mutate(latitude = coalesce(latitude_mermaid, latitude_fish),
+         longitude = coalesce(longitude_mermaid, longitude_fish),
+         reef_type = coalesce(reef_type_mermaid, reef_type_fish),
+         reef_zone = coalesce(reef_zone_mermaid, reef_zone_fish),
+         reef_exposure = coalesce(reef_exposure_mermaid, reef_exposure_fish)) %>%
+  select(ma_name, name, latitude, longitude, country_fish, reef_type, reef_zone, reef_exposure) %>% 
+  rename(country = country_fish)
+
+
+  # Habitat
+sites_phi_habitat <- sites_phi_habitat %>%
+  left_join(ff2_habitat %>% select(location_name, sitename), by = c("name" = "location_name")) %>%
+  distinct(name, .keep_all = TRUE) %>% 
+  select(sitename, name, latitude, longitude, country, reef_type, reef_zone, exposure) %>% 
+  arrange(sitename)%>%
+  rename(site_name = sitename)%>% 
+  rename(reef_exposure = exposure)
+    # Cleaning location names
+sites_phi_habitat <- sites_phi_habitat %>%
+  mutate(name = tolower(name)) %>% #All to lowercase to avoid duplicates based on using uppercase 
+  mutate(name = gsub(" ", "_", name)) %>% #Change spaces to _ to avoid duplicates
+  distinct(name, .keep_all = TRUE)
+
+
+# Perform the left join to combine the datasets
+merged_sites_phi_habitat <- sites_phi_habitat %>%
+  left_join(sites_mermaid_phi, by = c("name" = "site"), suffix = c("_habitat", "_mermaid"))
+
+# Update the relevant columns in sites_hon_fish with the values from sites_mermaid_hon
+sites_phi_habitat <- merged_sites_phi_habitat %>%
+  mutate(latitude = coalesce(latitude_mermaid, latitude_habitat),
+         longitude = coalesce(longitude_mermaid, longitude_habitat),
+         reef_type = coalesce(reef_type_mermaid, reef_type_habitat),
+         reef_zone = coalesce(reef_zone_mermaid, reef_zone_habitat),
+         reef_exposure = coalesce(reef_exposure_mermaid, reef_exposure_habitat)) %>%
+  select(site_name, name, latitude, longitude, country_habitat, reef_type, reef_zone, reef_exposure) %>% 
+  rename(country = country_habitat)
+
+
+```
+
+
+
+
+
+
+```{r}
+# Excel outputs:
+
+# Mozambique
+#folder_path <- file.path(getwd(), "sites_excel")
+#file_path <- file.path(folder_path, "sites_moz_fish.xlsx")
+#write_xlsx(sites_moz_fish, file_path)
+
+#file_path <- file.path(folder_path, "sites_moz_habitat.xlsx")
+#write_xlsx(sites_moz_habitat, file_path)
+
+
+# Honduras
+#file_path <- file.path(folder_path, "sites_hon_fish.xlsx")
+#write_xlsx(sites_hon_fish, file_path)
+
+#file_path <- file.path(folder_path, "sites_hon_habitat.xlsx")
+#write_xlsx(sites_hon_habitat, file_path)
+
+
+# Indonesia
+#file_path <- file.path(folder_path, "sites_ind_fish.xlsx")
+#write_xlsx(sites_ind_fish, file_path)
+
+#file_path <- file.path(folder_path, "sites_ind_habitat.xlsx")
+#write_xlsx(sites_ind_habitat, file_path)
+
+# Philippine 
+#file_path <- file.path(folder_path, "sites_phi_fish.xlsx")
+#write_xlsx(sites_phi_fish, file_path)
+
+#file_path <- file.path(folder_path, "sites_phi_habitat.xlsx")
+#write_xlsx(sites_phi_habitat, file_path)
+
+
+# CSV outputs:
+
+# Mozambique
+#folder_path <- file.path(getwd(), "sites_csv")
+#file_path <- file.path(folder_path, "sites_moz_fish.csv")
+#write.csv(sites_moz_fish, file_path, row.names = FALSE)
+
+#file_path <- file.path(folder_path, "sites_moz_habitat.csv")
+#write.csv(sites_moz_habitat, file_path, row.names = FALSE)
+
+
+#Honduras:
+#file_path <- file.path(folder_path, "sites_hon_fish.csv")
+#write.csv(sites_hon_fish, file_path, row.names = FALSE)
+
+#file_path <- file.path(folder_path, "sites_hon_habitat.csv")
+#write.csv(sites_hon_habitat, file_path, row.names = FALSE)
+
+
+#Indonesia:
+#file_path <- file.path(folder_path, "sites_ind_fish.csv")
+#write.csv(sites_ind_fish, file_path, row.names = FALSE)
+
+#file_path <- file.path(folder_path, "sites_ind_habitat.csv")
+#write.csv(sites_ind_habitat, file_path, row.names = FALSE)
+
+
+#Philippines 
+#file_path <- file.path(folder_path, "sites_phi_fish.csv")
+#write.csv(sites_phi_fish, file_path, row.names = FALSE)
+
+#file_path <- file.path(folder_path, "sites_phi_habitat.csv")
+#write.csv(sites_phi_habitat, file_path, row.names = FALSE)
+
+```
+
+

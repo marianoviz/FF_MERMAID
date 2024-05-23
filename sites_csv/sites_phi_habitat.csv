@@ -1,0 +1,107 @@
+"site_name","name","latitude","longitude","country","reef_type","reef_zone","reef_exposure"
+"Abiera","abiera_mpa",11.57927,122.08592,"Philippines",NA,NA,NA
+"Burgos","burgos_mpa_station_1",10.03171,126.07484,"Philippines",NA,NA,NA
+"Burgos","burgos_mpa_station_2",10.0238,126.07485,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_1",10.03171,126.07484,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_11",10.0268,126.07419,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_12",10.0268,126.07419,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_17",10.0268,126.07419,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_19",10.0268,126.07419,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_2",10.0268,126.07419,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_21",10.0268,126.07419,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_22",10.0268,126.07419,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_24",10.0268,126.07419,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_25",10.0268,126.07419,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_27",10.0268,126.07419,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_29",10.0268,126.07419,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_30",10.0268,126.07419,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_33",10.0268,126.07419,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_5",10.0268,126.07419,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_7",10.0268,126.07419,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_9",10.0268,126.07419,"Philippines",NA,NA,NA
+"Calmante","calmante_station_1",10.63869,124.49599,"Philippines",NA,NA,NA
+"Calmante","calmante_station_2",10.63937,124.49796,"Philippines",NA,NA,NA
+"Daan Paz","inusukan_mpa_station_1",10.70717,124.47272,"Philippines",NA,NA,NA
+"Daan Paz","inusukan_mpa_station_2",10.70717,124.47272,"Philippines",NA,NA,NA
+"Daan Paz","inusukan_outside_station_1",10.71549,124.47965,"Philippines",NA,NA,NA
+"Daan Paz","inusukan_outside_station_2",10.71549,124.4797,"Philippines",NA,NA,NA
+"Dapdap","dapdap_mpa_station_1",10.79075,124.52159,"Philippines",NA,NA,NA
+"Dapdap","dapdap_mpa_station_2",10.79075,124.52159,"Philippines",NA,NA,NA
+"Duyong","duyong_outside",11.72114,122.02711,"Philippines",NA,NA,NA
+"Esperanza","tuland_diot_station_1",10.71997,124.31458,"Philippines",NA,NA,NA
+"Esperanza","tuland_diot_station_2",10.71983,124.48389,"Philippines",NA,NA,NA
+"General Luna","cloud_9_station_1",9.82509,126.15352,"Philippines",NA,NA,NA
+"General Luna","cloud_9_station_2",9.81476,126.16052,"Philippines",NA,NA,NA
+"General Luna","daku_outside_station_1",9.7457,126.15482,"Philippines",NA,NA,NA
+"General Luna","daku_outside_station_2",9.74654,126.16176,"Philippines",NA,NA,NA
+"General Luna","general_luna_mpa_station_1",9.74043,126.13017,"Philippines",NA,NA,NA
+"General Luna","general_luna_mpa_station_2",9.749,126.14124,"Philippines",NA,NA,NA
+"Idiacacan","idiacacan_mpa",11.6791,122.09854,"Philippines",NA,NA,NA
+"Idio","idio_mpa",11.62858,122.09555,"Philippines",NA,NA,NA
+"Mabini","mabini_mpa_station_1",10.62609,124.4201,"Philippines",NA,NA,NA
+"Mabini","mabini_mpa_station_2",10.62665,124.41641,"Philippines",NA,NA,NA
+"Mabini","mabini_station_3",10.62553,124.42918,"Philippines",NA,NA,NA
+"Mag-Aba","mag-aba_mpa",11.72867,122.04732,"Philippines",NA,NA,NA
+"Patria","patria_mpa",11.73286,122.01403,"Philippines",NA,NA,NA
+"Pilar","pilar_poblacion_mpa_station_1",9.86097,126.10057,"Philippines",NA,NA,NA
+"Pilar","pilar_poblacion_mpa_station_2",9.85963,126.10344,"Philippines",NA,NA,NA
+"Pilar","pilar_salvacion_mpa_station_1",9.85388,126.11036,"Philippines",NA,NA,NA
+"Pilar","pilar_salvacion_mpa_station_2",9.85355,126.10806,"Philippines",NA,NA,NA
+"Poblacion","pmp_inside",10.79676,124.57027,"Philippines",NA,NA,NA
+"Poblacion","pmp_outside",10.79674,124.57027,"Philippines",NA,NA,NA
+"Poblacion","puntod_shoal_mpa",11.60746403,122.018217,"Philippines",NA,NA,NA
+"Puertobello","puertobello_mpa",10.68785,124.49812,"Philippines",NA,NA,NA
+"San Benito","maribojoc_mpa_station_1",9.94723,125.95507,"Philippines",NA,NA,NA
+"San Benito","maribojoc_outside_station_1",9.94783,126.95408,"Philippines",NA,NA,NA
+"San Benito","talisay_mpa_station_1",9.95945,125.99199,"Philippines",NA,NA,NA
+"San Benito","talisay_outside_station_1",9.9702,125.97849,"Philippines",NA,NA,NA
+"San Isidro","san_isidro_mpa",10.61462,124.35483,"Philippines",NA,NA,NA
+"San Isidro","san_isidro_outside",10.61489,124.36065,"Philippines",NA,NA,NA
+"Soccorro","pamosaingan_mpa_station_1",9.68204,125.91595,"Philippines",NA,NA,NA
+"Soccorro","pamosaingan_mpa_station_2",9.69323,125.91211,"Philippines",NA,NA,NA
+"Soccorro","pamosaingan_outside_station_1",9.65914,125.9102,"Philippines",NA,NA,NA
+"Soccorro","pamosaingan_outside_station_2",9.70321,125.91297,"Philippines",NA,NA,NA
+"Sta. Monica","alegria_mpa_inside_station_1",10.0625,126.06673,"Philippines",NA,NA,NA
+"Sta. Monica","alegria_mpa_inside_station_2",10.06158,126.06829,"Philippines",NA,NA,NA
+"Sta. Monica","t._arlan_mpa_inside_station_1",10.01406,126.02107,"Philippines",NA,NA,NA
+"Sta. Monica","t._arlan_mpa_outside_station_1",10.01887,126.02085,"Philippines",NA,NA,NA
+"Tingib","tingib_mpa",11.72844,122.04581,"Philippines",NA,NA,NA
+"Union","nag-uban_mpa",10.68562,124.30733,"Philippines",NA,NA,NA
+"Villahermosa","villahermosa_mpa",10.67045,124.51665,"Philippines",NA,NA,NA
+NA,"agay-ayan",13.9653448275862,123.423918565517,"Philippines",NA,NA,NA
+NA,"alegria_mpa",10.0621515151515,126.067320909091,"Philippines",NA,NA,NA
+NA,"bangaan",7.49091825726141,122.42229253112,"Philippines",NA,NA,NA
+NA,"buluan",7.68478887323944,122.545191549296,"Philippines",NA,NA,NA
+NA,"buluan_island_marine_sanctuary",7.68478887323944,122.545191549296,"Philippines",NA,NA,NA
+NA,"burgos_mpa",10.0238,126.07485,"Philippines",NA,NA,NA
+NA,"caloco",13.9874136403509,123.418724035088,"Philippines",NA,NA,NA
+NA,"caub_mpa",9.90186045454545,125.884837606061,"Philippines",NA,NA,NA
+NA,"cloud_9_propose_mpa",9.82119188679245,126.156161509434,"Philippines",NA,NA,NA
+NA,"corregidor_mpa",9.69408018050541,126.076506389892,"Philippines",NA,NA,NA
+NA,"daku_island",9.7457,126.15482,"Philippines",NA,NA,NA
+NA,"diosan",7.63007598484849,122.494960909091,"Philippines",NA,NA,NA
+NA,"ermita",10.4280424615385,123.430804307692,"Philippines",NA,NA,NA
+NA,"gen_luna_mpa",9.74043,126.13017,"Philippines",NA,NA,NA
+NA,"iniban",9.8888113,123.1488311,"Philippines",NA,NA,NA
+NA,"lampinigan",7.65451705882353,123.071331764706,"Philippines",NA,NA,NA
+NA,"litayun_mpa",7.44069309782609,122.976686521739,"Philippines",NA,NA,NA
+NA,"mabuhay_marine_park",7.41022341968912,122.947416373057,"Philippines",NA,NA,NA
+NA,"mantalip",9.79601907563025,123.165064537815,"Philippines",NA,NA,NA
+NA,"maribojoc_mpa",9.94744764705882,126.317455980392,"Philippines",NA,NA,NA
+NA,"moyong_mpa",7.58173255474453,123.047818540146,"Philippines",NA,NA,NA
+NA,"pamosaingan_mpa",9.68408655,125.91246945,"Philippines",NA,NA,NA
+NA,"pandilosan_is.",7.46166014925373,122.691809701493,"Philippines",NA,NA,NA
+NA,"poblacion_mpa",9.86048272727273,126.101613636364,"Philippines",NA,NA,NA
+NA,"pucio",11.75718,121.85178,"Philippines",NA,NA,NA
+NA,"punta_manobo",7.77645350515464,122.697710412371,"Philippines",NA,NA,NA
+NA,"salvacion_mpa",9.85366435643564,126.108857029703,"Philippines",NA,NA,NA
+NA,"san_antonio",14.0361265263158,123.39422245614,"Philippines",NA,NA,NA
+NA,"san_juan",10.4518967567568,123.444411135135,"Philippines",NA,NA,NA
+NA,"sand_bar",7.53704342857143,122.725913428571,"Philippines",NA,NA,NA
+NA,"t._arlan_mpa",10.0165192481203,126.020957518797,"Philippines",NA,NA,NA
+NA,"takot_lawum",7.76690031578947,122.695584105263,"Philippines",NA,NA,NA
+NA,"takut_siare",7.42696884210526,122.773241,"Philippines",NA,NA,NA
+NA,"talisay_mpa",9.96452075471698,125.985622075472,"Philippines",NA,NA,NA
+NA,"tambanan",7.30803917695473,122.799907901235,"Philippines",NA,NA,NA
+NA,"tandu-balasa",7.77679021505376,122.711449892473,"Philippines",NA,NA,NA
+NA,"tinigbas",11.7546258823529,121.865458088235,"Philippines",NA,NA,NA

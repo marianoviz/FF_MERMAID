@@ -16,7 +16,6 @@ library(mermaidr)
 
 ## MERMAID Ingestion Test
 
-
 ### 1. Download the MERMAID Template
 
 ```{r}
@@ -36,13 +35,19 @@ names(fish_template_and_options)
 fish_template_and_options[["Site *"]]
 fish_template_and_options[["Management *"]]
 
-habitat_template_and_options <- mermaid_import_get_template_and_options(
+habitat_pit_template_and_options <- mermaid_import_get_template_and_options(
   test,
   "benthicpit", # Method
   "benthicpit_mermaid_template.xlsx")
 
 habitat_template_and_options[["Template"]]
 names(habitat_template_and_options)
+
+habitat_photo_template_and_options <- mermaid_import_get_template_and_options( 
+  test,
+  "fishbelt",
+  "fishbelt_mermaid_template.xlsx")
+
 
 ```
 

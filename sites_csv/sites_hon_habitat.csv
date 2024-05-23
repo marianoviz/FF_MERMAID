@@ -1,0 +1,28 @@
+"site_name","name","latitude","longitude","country","reef_type","reef_zone","reef_exposure"
+"Iriona and Limón","mil3",NA,NA,"Honduras",NA,NA,NA
+"Iriona and Limón","mil1",NA,NA,"Honduras",NA,NA,NA
+"Iriona and Limón","mil2",NA,NA,"Honduras",NA,NA,NA
+"Puerto Cortés","mbpc-4",NA,NA,"Honduras",NA,NA,NA
+"Puerto Cortés","mbpc-8",NA,NA,"Honduras",NA,NA,NA
+"Puerto Cortés","mbpc-2",NA,NA,"Honduras",NA,NA,NA
+"Puerto Cortés","mbpc-1",NA,NA,"Honduras",NA,NA,NA
+"Puerto Cortés","mbpc-7",NA,NA,"Honduras",NA,NA,NA
+"Puerto Cortés","mbpc-5",NA,NA,"Honduras",NA,NA,NA
+"Puerto Cortés","mbpc-6",NA,NA,"Honduras",NA,NA,NA
+"Roatán","10",NA,NA,"Honduras",NA,NA,NA
+"Roatán","11",NA,NA,"Honduras",NA,NA,NA
+"Roatán","18",NA,NA,"Honduras",NA,NA,NA
+"Roatán","19",NA,NA,"Honduras",NA,NA,NA
+"Roatán","20",NA,NA,"Honduras",NA,NA,NA
+"Roatán","21",NA,NA,"Honduras",NA,NA,NA
+"Roatán","22",NA,NA,"Honduras",NA,NA,NA
+"Roatán","7",NA,NA,"Honduras",NA,NA,NA
+"Roatán","8",NA,NA,"Honduras",NA,NA,NA
+"Roatán","6",NA,NA,"Honduras",NA,NA,NA
+"Roatán","17",NA,NA,"Honduras",NA,NA,NA
+"Santa Fe","cayo_blanco",15.928,-86.037,"Honduras","patch","crest","sheltered"
+"Santa Fe","bajo_seco",NA,NA,"Honduras",NA,NA,NA
+"Santa Fe","nmsf1",NA,NA,"Honduras",NA,NA,NA
+"Utila","uoia2",16.0742,-86.9845,"Honduras","barrier","back reef","sheltered"
+"Utila","uwia2",16.0784,-87.0105,"Honduras","barrier","back reef","semi-exposed"
+"Utila","uoca1",16.0604,-86.965,"Honduras","barrier","back reef","semi-exposed"

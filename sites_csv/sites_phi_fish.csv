@@ -1,0 +1,158 @@
+"ma_name","name","latitude","longitude","country","reef_type","reef_zone","reef_exposure"
+"Alicia","a:_litayun_fish_sanctuary",7.43699,122.98296,"Philippines","barrier","crest","semi-exposed"
+"Alicia","b:_litayun_fish_sanctuary",7.44651,122.96776,"Philippines","fringing","crest","semi-exposed"
+"Ayungon","a:_iniban_marine_sanctuary",9.88926,123.14869,"Philippines","fringing","crest","semi-exposed"
+"Ayungon","b:_iniban_marine_sanctuary",9.88515,123.1502,"Philippines","fringing","crest","semi-exposed"
+"Ayungon","iniban_ms",9.88884878303109,123.148789342617,"Philippines",NA,NA,NA
+"Ayungon","iniban_marine_sanctuary",9.88916772526971,123.14882842881,"Philippines",NA,NA,NA
+"Bindoy","a:_mantalip_marine_reserve",9.79871,123.16,"Philippines","atoll","crest","semi-exposed"
+"Bindoy","b:_mantalip_marine_reserve",9.79871,123.16,"Philippines","atoll","crest","semi-exposed"
+"Bindoy","mantalip",9.79696404726736,123.16605344904,"Philippines",NA,NA,NA
+"Bindoy","mantalip_marine_reserve",9.79551111082138,123.167642571056,"Philippines",NA,NA,NA
+"Burgos","a:_burgos_marine_protected_area",10.0238,126.07485,"Philippines","fringing","crest","semi-exposed"
+"Burgos","burgos_inside_station_1",10.02055,126.07485,"Philippines",NA,NA,NA
+"Burgos","burgos_inside_station_2",10.0238,126.07485,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_3",10.0268,126.07419,"Philippines",NA,NA,NA
+"Burgos","burgos_outside_station_4",10.03171,126.07484,"Philippines",NA,NA,NA
+"Buug","a:_lampinigan_fish_sanctuary",7.65287,123.07174,"Philippines","fringing","crest","sheltered"
+"Cantilan","ayoke",9.39276845652174,126.043055891304,"Philippines",NA,NA,NA
+"Cantilan","ayoke_marine_protected_area",9.39592718058986,126.039414118698,"Philippines",NA,NA,NA
+"Cantilan","gen._island",9.402795232,126.023107712,"Philippines",NA,NA,NA
+"Cortes","burgos",9.24489617154812,126.195452845188,"Philippines",NA,NA,NA
+"Cortes","burgos_marine_protected_area",9.24537926666667,126.196952133333,"Philippines",NA,NA,NA
+"Cortes","poblacion",9.27956365439093,126.204261728045,"Philippines",NA,NA,NA
+"Cortes","poblacion_marine_protected_area",9.27957077948718,126.204262102564,"Philippines",NA,NA,NA
+"Cortes","uba",9.288065097423,126.203839252043,"Philippines",NA,NA,NA
+"Cortes","uba_marine_protected_area",9.28728504568339,126.203197652433,"Philippines",NA,NA,NA
+"Culasi","1",11.40093,122.01504,"Philippines",NA,NA,NA
+"Culasi","2",11.41241,122.02777,"Philippines",NA,NA,NA
+"Culasi","3",11.4121,122.02798,"Philippines",NA,NA,NA
+"Culasi","hambongan_marine_protected_area",10.0680756301824,124.018411713654,"Philippines",NA,NA,NA
+"Culasi","malalison",11.4075501261564,122.022524869638,"Philippines",NA,NA,NA
+"Culasi","malalison_island_marine_sanctuary",11.5600765028626,122.020679379771,"Philippines",NA,NA,NA
+"Dapa","a:_corregidor_fish_sanctuary",9.68804,126.06481,"Philippines","fringing","crest","semi-exposed"
+"Dapa","b:_corregidor_fish_sanctuary",9.69868,126.07593,"Philippines","fringing","crest","semi-exposed"
+"Dapa","corregidor",9.69438544661191,126.076664240246,"Philippines",NA,NA,NA
+"Dapa","corregidor_fish_sanctuary",9.69398926771654,126.07589480315,"Philippines",NA,NA,NA
+"Dapa","dapa1",9.69298,126.0726,"Philippines",NA,NA,NA
+"Dapa","dapa2",9.68804,126.06481,"Philippines",NA,NA,NA
+"Dapa","dapa3",9.68907,126.07477,"Philippines",NA,NA,NA
+"Dapa","dapa4",9.6966,126.08943,"Philippines",NA,NA,NA
+"Dapa","dapa5",9.69864,126.08733,"Philippines",NA,NA,NA
+"Dapa","dapa6",9.69868,126.07593,"Philippines",NA,NA,NA
+"Del Carmen","a:_caub_marine_sanctuary",9.90209,125.88267,"Philippines","fringing","crest","semi-exposed"
+"Del Carmen","b:_caub_marine_sanctuary",9.90821,125.88614,"Philippines","fringing","crest","semi-exposed"
+"Del Carmen","caub",9.90029736780258,125.88430799765,"Philippines",NA,NA,NA
+"Del Carmen","caub_fish_sanctuary",9.89990797802952,125.884627123241,"Philippines",NA,NA,NA
+"Del Carmen","dc1",9.90821,125.88614,"Philippines",NA,NA,NA
+"Del Carmen","dc2",9.90209,125.88267,"Philippines",NA,NA,NA
+"Del Carmen","dc3",9.90139,125.88167,"Philippines",NA,NA,NA
+"Del Carmen","dc4",9.89979,125.8814,"Philippines",NA,NA,NA
+"Del Carmen","dc5",9.89598,125.88514,"Philippines",NA,NA,NA
+"Del Carmen","dc6",9.89254,125.88883,"Philippines",NA,NA,NA
+"General Luna","cloud_9_outside_station_1",9.82509,126.15352,"Philippines",NA,NA,NA
+"General Luna","cloud_9_outside_station_2",9.81476,126.16052,"Philippines",NA,NA,NA
+"General Luna","cloud_9_proposed_marine_protected_area",9.82509,126.15352,"Philippines","lagoon","back reef","very sheltered"
+"General Luna","cloud_9_proposed_marine_protected_area.",9.81476,126.16052,"Philippines","lagoon","back reef","very sheltered"
+"General Luna","daku_is.__outside_station_1",9.7457,126.15482,"Philippines",NA,NA,NA
+"General Luna","daku_is.__outside_station_2",9.74654,126.16176,"Philippines",NA,NA,NA
+"General Luna","gen_luna_marine_protected_area",9.74043,126.13017,"Philippines","patch","back reef","sheltered"
+"General Luna","poblacion_inside_station_1",9.78903483870968,126.118234516129,"Philippines",NA,NA,NA
+"General Luna","poblacion_inside_station_2",9.78578780722892,126.128670361446,"Philippines",NA,NA,NA
+"Gubat","ragnas",NA,NA,"Philippines",NA,NA,NA
+"Gubat","ragnas_marine_protected_area",12.9706728017345,124.164291544206,"Philippines",NA,NA,NA
+"Ipil","a:_buluan_island_marine_sanctuary",7.68707,122.54477,"Philippines","fringing","crest","semi-exposed"
+"Ipil","b:_buluan_island_marine_sanctuary",7.68718,122.5328,"Philippines","fringing","crest","semi-exposed"
+"Ipil","buluan_island_marine_sanctuary",7.68359518625526,122.542269781627,"Philippines",NA,NA,NA
+"Libertad","a:_tinigbas_marine_sanctuary",11.7551,121.86043,"Philippines","fringing","crest","semi-exposed"
+"Libertad","b:_tinigbas_marine_sanctuary",11.75718,121.85178,"Philippines","fringing","crest","semi-exposed"
+"Libertad","libertad1",11.75718,121.85178,"Philippines",NA,NA,NA
+"Libertad","libertad2",11.7551,121.86043,"Philippines",NA,NA,NA
+"Libertad","libertad3",11.75469,121.86247,"Philippines",NA,NA,NA
+"Libertad","libertad4",11.7548,121.86369,"Philippines",NA,NA,NA
+"Libertad","libertad5",11.75451,121.86774,"Philippines",NA,NA,NA
+"Libertad","libertad6",11.75412,121.87232,"Philippines",NA,NA,NA
+"Libertad","tinigbas_marine_sanctuary",11.7551917215022,121.862231000332,"Philippines",NA,NA,NA
+"Looc","bahurang_aurora_fishery_reserve",13.7194236720623,120.275894322542,"Philippines",NA,NA,NA
+"Lubang","bahurang_vigo_fishery_reserve",13.8459178217513,120.190705546899,"Philippines",NA,NA,NA
+"Mabuhay","a:_mabuhay_marine_park",7.40308,122.94822,"Philippines","fringing","crest","semi-exposed"
+"Mabuhay","b:_mabuhay_marine_park",7.41658,122.94522,"Philippines","patch","crest","semi-exposed"
+"Malangas","a:_moyong_fish_sanctuary",7.58108,123.0469,"Philippines","fringing","crest","sheltered"
+"Manjuyod","bolisong_marine_sanctuary",9.704874935164,123.160478967709,"Philippines",NA,NA,NA
+"Masinloc","san_salvador_marine_protected_area",15.5243213923014,119.899105012285,"Philippines",NA,NA,NA
+"Mercedes","caringo_fish_sanctuary",14.0337194763092,123.096745885287,"Philippines",NA,NA,NA
+"Naga","a:_tandu_balasan_marine_protected_area",7.77806,122.70861,"Philippines","fringing","crest","semi-exposed"
+"Naga","b:_tandu_balasan_marine_protected_area",7.77806,122.70861,"Philippines","fringing","crest","semi-exposed"
+"Naga","takot-lawum_proposed_marine_protected_area",7.76211,122.695,"Philippines","atoll","crest","semi-exposed"
+"Pandan","abriera_inside_station_1",11.5803832089552,122.085620671642,"Philippines",NA,NA,NA
+"Pandan","dungon_outside_station_1",11.72114,122.02711,"Philippines",NA,NA,NA
+"Pandan","idiacacan_inside_station_1",11.6795569565217,122.097763586957,"Philippines",NA,NA,NA
+"Pandan","mag-aba_inside_station_1",11.7283257638889,122.047675694444,"Philippines",NA,NA,NA
+"Pandan","patria_inside_station_1",11.7328420171674,122.014172875536,"Philippines",NA,NA,NA
+"Pandan","tingib_inside_station_1",11.7284671165644,122.045615030675,"Philippines",NA,NA,NA
+"Payao","a:_sand_bar_marine_sanctuary",7.53548,122.72639,"Philippines","atoll","crest","exposed"
+"Payao","pandilosan_island_marine_sanctuary",7.46223,122.69366,"Philippines","fringing","crest","exposed"
+"Pilar","dapdap_inside_station1",10.79075,124.52159,"Philippines",NA,NA,NA
+"Pilar","dapdap_inside_station2",10.7936,124.52338,"Philippines",NA,NA,NA
+"Pilar","pilar_park_inside_station1",10.79676,124.57027,"Philippines",NA,NA,NA
+"Pilar","pilar_park_outside_station2",10.79674,124.57027,"Philippines",NA,NA,NA
+"Pilar","salvacion_inside_station_1",9.85388,126.11036,"Philippines",NA,NA,NA
+"Pilar","salvacion_inside_station_2",9.85355,126.10806,"Philippines",NA,NA,NA
+"Pilar Siargao","pilar_marine_fish_sanctuary",9.86097,126.10057,"Philippines","fringing","channel","sheltered"
+"Pilar Siargao","salvacion_marine_protected_area",9.85388,126.11036,"Philippines","fringing","back reef","sheltered"
+"Poro","inusukan_inside_station1",10.70717,124.47272,"Philippines",NA,NA,NA
+"Poro","inusukan_inside_station2",10.70642,124.47636,"Philippines",NA,NA,NA
+"Poro","inusukan_outside_station3",10.71549,124.479667741935,"Philippines",NA,NA,NA
+"Poro","inusukan_outside_station4",10.71549,124.4797,"Philippines",NA,NA,NA
+"Poro","mabini_mpa_inside_station1",10.62609,124.4201,"Philippines",NA,NA,NA
+"Poro","mabini_mpa_inside_station2",10.62665,124.41641,"Philippines",NA,NA,NA
+"Poro","mabini_mpa_outside_station3",10.62553,124.42918,"Philippines",NA,NA,NA
+"Roseller Lim","a:_roseller_t._lim_marine_protected_area",7.6296,122.49483,"Philippines","fringing","crest","semi-exposed"
+"Sagnay","atulayan_bay_fish_sanctuary_and_marine_reserve",13.588664333795,123.564602288089,"Philippines",NA,NA,NA
+"San Benito","maribojoc_inside_station_1",9.94723,125.95507,"Philippines",NA,NA,NA
+"San Benito","maribojoc_marine_protected_area",9.94723,125.95507,"Philippines","fringing","back reef","semi-exposed"
+"San Benito","maribojoc_outside_station_2",9.94783,126.95408,"Philippines",NA,NA,NA
+"San Benito","talisay_inside_station_1",9.95945,125.99199,"Philippines",NA,NA,NA
+"San Benito","talisay_marine_fish_sanctuary",9.95945,125.99199,"Philippines","patch","back reef","sheltered"
+"San Benito","talisay_outside_station_2",9.9702,125.97849,"Philippines",NA,NA,NA
+"San Carlos","a:_ermita_marine_protected_area",10.42764,123.43484,"Philippines","atoll","crest","exposed"
+"San Carlos","a:_san_juan_marine_protected_area",10.45482,123.44734,"Philippines","fringing","crest","exposed"
+"San Carlos","b:_ermita_marine_protected_area",10.4465,123.439,"Philippines","fringing","crest","exposed"
+"San Carlos","ermita_marine_protected_area",10.43136352657,123.433651483782,"Philippines",NA,NA,NA
+"San Carlos","san_juan_marine_protected_area",10.45482,123.44734,"Philippines",NA,NA,NA
+"San Francisco","nagub-an_mpa_inside_station1",10.68562,124.30733,"Philippines",NA,NA,NA
+"San Francisco","san_isidro_mpa_inside_station2",10.61462,124.35483,"Philippines",NA,NA,NA
+"San Francisco","san_isidro_mpa_outside_station1",10.61489,124.36065,"Philippines",NA,NA,NA
+"San Francisco","tulang_diot_inside_station1",10.71997,124.31458,"Philippines",NA,NA,NA
+"San Francisco","tulang_diot_inside_station2",10.71983,124.48389,"Philippines",NA,NA,NA
+"San Isidro","tigasao_inside_station_1",9.93799,126.10743,"Philippines",NA,NA,NA
+"Santa Monica","a:_alegria_marine_protected_area",10.06158,126.06829,"Philippines","fringing","back reef","exposed"
+"Santa Monica","alegria_inside_station_1",10.0625,126.06673,"Philippines",NA,NA,NA
+"Santa Monica","alegria_inside_station_2",10.06158,126.06829,"Philippines",NA,NA,NA
+"Santa Monica","t._arlan_inside_station_1",10.01406,126.02107,"Philippines",NA,NA,NA
+"Santa Monica","t._arlan_marine_protected_area",10.01406,126.02107,"Philippines","fringing","crest","semi-exposed"
+"Santa Monica","t._arlan_outside_station_2",10.01887,126.02085,"Philippines",NA,NA,NA
+"Sebaste","idio_inside_station_1",11.6280440217391,122.095445326087,"Philippines",NA,NA,NA
+"Sebaste","puntod_shoal_inside_station_1",11.6075292027469,122.01845867284,"Philippines",NA,NA,NA
+"Socorro","pamosaingan_inside_station_1",9.68204,125.91595,"Philippines",NA,NA,NA
+"Socorro","pamosaingan_inside_station_2",9.69323,125.91211,"Philippines",NA,NA,NA
+"Socorro","pamosaingan_marine_sanctuary",9.68204,125.91595,"Philippines","fringing","crest","semi-exposed"
+"Socorro","pamosaingan_outside_station_1",9.65914,125.9102,"Philippines",NA,NA,NA
+"Socorro","pamosaingan_outside_station_2",9.70321,125.91297,"Philippines",NA,NA,NA
+"Talusan","a:_takot_siari_marine_protected_area",7.42628,122.76968,"Philippines","barrier","crest","semi-exposed"
+"Talusan","b:_takot_siari_marine_protected_area",7.42882,122.77838,"Philippines","barrier","crest","semi-exposed"
+"Tayasan","cabulotan_marine_reserve",9.93088083802584,123.179534975157,"Philippines",NA,NA,NA
+"Tinambac","a:_agay-ayan-caloco_marine_protected_areas",13.99115,123.41275,"Philippines","fringing","crest","semi-exposed"
+"Tinambac","agca",13.9780479496669,123.420514558105,"Philippines",NA,NA,NA
+"Tinambac","agca_integrated_marine_and_coastal_wetland_sanctuary",13.9898117148263,123.416074791882,"Philippines",NA,NA,NA
+"Tinambac","b:_agay-ayan-caloco_marine_protected_areas",13.99115,123.41275,"Philippines","fringing","crest","semi-exposed"
+"Tinambac","san_antonio",14.0374160520607,123.394598915401,"Philippines",NA,NA,NA
+"Tinambac","san_antonio_&_salingogon_fish_sanctuaries",14.03876,123.39632,"Philippines","fringing","crest","semi-exposed"
+"Tudela","calmante__proposed_station1",10.63869,124.49599,"Philippines",NA,NA,NA
+"Tudela","calmante__proposed_station2",10.63937,124.49796,"Philippines",NA,NA,NA
+"Tudela","puertobello_mpa_inside_station1",10.68785,124.49812,"Philippines",NA,NA,NA
+"Tudela","villahermosa_inside_station1",10.67045,124.51665,"Philippines",NA,NA,NA
+"Tungawan","a:_bangaan_marine_sanctuary",7.4875,122.41495,"Philippines","fringing","crest","semi-exposed"
+"Tungawan","b:_bangaan_marine_sanctuary",7.4974,122.43578,"Philippines","fringing","channel","semi-exposed"
+NA,"a:_tambanan_fish_sanctuary",7.31032,122.80001,"Philippines",NA,NA,NA
+NA,"b:_tambanan_fish_sanctuary",7.3056,122.79993,"Philippines",NA,NA,NA
